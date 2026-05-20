@@ -44,8 +44,19 @@
             cursor: pointer;
             transition: all 0.2s;
             border: 2px solid transparent;
+            position: relative;
         }
-        .request-item:hover {
+        .request-item.locked {
+            background: #e9ecef;
+            opacity: 0.85;
+            cursor: not-allowed;
+            border-color: #dc3545;
+        }
+        .request-item.locked:hover {
+            border-color: #dc3545;
+            background: #f8f9fa;
+        }
+        .request-item:not(.locked):hover {
             border-color: #667eea;
             background: #fff;
         }
@@ -70,6 +81,18 @@
         .status-pending { background: #ff9500; color: white; }
         .status-approved { background: #34c759; color: white; }
         .status-rejected { background: #ff3b30; color: white; }
+        .status-closed { background: #6c757d; color: white; }
+        .locked-badge {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+            margin-right: 8px;
+            font-weight: bold;
+        }
         .loader {
             text-align: center;
             padding: 40px;
@@ -123,20 +146,6 @@
             text-align: center;
             background: #fff;
         }
-        .vote-list {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-        .vote-item {
-            display: inline-block;
-            padding: 5px 12px;
-            margin: 4px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-        .vote-item.approve { background: #d4edda; color: #155724; }
-        .vote-item.reject { background: #f8d7da; color: #721c24; }
         .status-msg {
             padding: 12px;
             border-radius: 12px;
@@ -145,7 +154,25 @@
         }
         .status-success { background: #d4edda; color: #155724; }
         .status-error { background: #f8d7da; color: #721c24; }
-        /* تذييل الصفحة الخاص بالمطور والمشرف العام - ترتيب حسب الطلب (المشرف العام فوق اسم المطور) */
+        .status-warning { background: #fff3cd; color: #856404; }
+        .info-box {
+            background: #e7f3ff;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .info-box p {
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+        .info-box strong {
+            color: #1e3c72;
+        }
+        /* تذييل الصفحة */
         .footer-credits {
             text-align: center;
             margin-top: 30px;
@@ -174,15 +201,25 @@
             display: inline-block;
             width: 100%;
         }
-        /* ضمان إخفاء أسماء المصوتين تماماً وعدم ظهورها بأي مكان */
+        .info-text {
+            font-size: 13px;
+            color: #495057;
+            margin-top: 5px;
+        }
+        .detail-field {
+            background: #fff;
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container" id="app"></div>
-    <!-- تذييل يحتوي على المشرف العام ثم المطور كما هو مطلوب (المشرف العام فوق اسم المطور) -->
+    <!-- تذييل يحتوي على المشرف العام والمطور (اسم المطور ماهر زمز) -->
     <div class="footer-credits">
         <div class="supervisor">👥 المشرف العام : مصطفى الشجاع</div>
-        <div class="developer">⚙️ تطوير النظام : عمرو مسعد الشجاع</div>
+        <div class="developer">⚙️ تطوير النظام : ماهر زمز</div>
     </div>
 
     <script>
@@ -202,6 +239,7 @@
 
         let allRequests = [];
         let selectedRequest = null;
+        let isAdminOrDevMode = false;
 
         const appDiv = document.getElementById('app');
 
@@ -224,6 +262,19 @@
             }
         }
 
+        // تحديد إذا كان الطلب قد تم التصويت عليه
+        function isRequestHasVotes(request) {
+            const votes = request.votes || {};
+            return Object.keys(votes).length > 0;
+        }
+
+        function isRequestLocked(request) {
+            if (!request) return false;
+            if (request.status === 'approved' || request.status === 'rejected') return true;
+            if (isRequestHasVotes(request)) return true;
+            return false;
+        }
+
         // عرض قائمة الطلبات
         function showRequestList() {
             if (allRequests.length === 0) {
@@ -231,76 +282,253 @@
                 return;
             }
 
-            let requestsHtml = '<div class="card"><h1>📋 اختر الطلب للتصويت عليه</h1><div class="request-list">';
+            let requestsHtml = '<div class="card"><h1>📋 قائمة طلبات المساعدة</h1>';
+            requestsHtml += '<div style="margin-bottom:15px; padding:10px; background:#e9ecef; border-radius:16px; font-size:13px;">🔓 <strong>الطلبات المفتوحة:</strong> يمكن التصويت عليها مباشرة | 🔒 <strong>الطلبات المغلقة:</strong> تم التصويت عليها مسبقاً (لا يمكن فتحها إلا بإذن الإدارة أو مطور النظام)</div>';
+            requestsHtml += '<div class="request-list">';
+            
             allRequests.forEach(req => {
+                const hasVotes = isRequestHasVotes(req);
+                const locked = isRequestLocked(req);
                 const statusText = req.status === 'pending' ? 'قيد المراجعة' : req.status === 'approved' ? 'مقبول' : 'مرفوض';
                 const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
+                const votesCount = Object.keys(req.votes || {}).length;
+                let voteInfo = '';
+                if (hasVotes) {
+                    const approveCount = Object.values(req.votes || {}).filter(v => v === 'موافق').length;
+                    const rejectCount = Object.values(req.votes || {}).filter(v => v === 'غير موافق').length;
+                    voteInfo = `<div class="info-text">🗳️ عدد المصوتين: ${votesCount} (✅ ${approveCount} موافق | ❌ ${rejectCount} غير موافق)</div>`;
+                } else {
+                    voteInfo = `<div class="info-text">✨ لم يتم التصويت على هذا الطلب بعد - متاح للتصويت</div>`;
+                }
+                const lockBadge = locked ? '<span class="locked-badge">🔒 مغلق (بتصويت)</span>' : '<span class="locked-badge" style="background:#28a745;">🔓 مفتوح للتصويت</span>';
+                const onclickAttr = locked ? `showLockedMessage('${req.id}')` : `selectRequest('${req.id}')`;
+                
                 requestsHtml += `
-                    <div class="request-item" onclick="selectRequest('${req.id}')">
+                    <div class="request-item ${locked ? 'locked' : ''}" onclick="${onclickAttr}">
                         <div class="request-title">${escapeHtml(req.caseName || 'بدون عنوان')}</div>
                         <div class="request-details">👤 ${escapeHtml(req.requesterName || 'غير محدد')} | 💰 ${req.requestAmount || 0} ${req.preferredCurrency === 'sar' ? 'ر.س' : req.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</div>
                         <span class="status-badge ${statusClass}">${statusText}</span>
+                        ${lockBadge}
+                        ${voteInfo}
                     </div>
                 `;
             });
             requestsHtml += '</div></div>';
+            
+            // رمز الإدارة تم تغييره إلى 0805 ورمز المطور كما هو
+            requestsHtml += `
+                <div class="card" style="background: #fef7e0; text-align:center;">
+                    <p style="font-size:14px; margin-bottom:12px;">🔐 صلاحية فتح الطلبات المغلقة (للمطور أو الإدارة فقط)</p>
+                    <input type="password" id="adminKeyInput" class="voter-input" placeholder="أدخل رمز الإدارة أو المطور" style="max-width:250px; margin:0 auto 10px auto; display:block;">
+                    <button class="back-btn" onclick="enableAdminMode()" style="background:#6c5ce7;">🔓 تفعيل صلاحية فتح الطلبات</button>
+                    <div id="adminModeMsg" style="margin-top:10px; font-size:13px;"></div>
+                </div>
+            `;
             appDiv.innerHTML = requestsHtml;
         }
-
-        // دالة مساعدة للهروب من الـ HTML
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
+        
+        window.showLockedMessage = function(requestId) {
+            const req = allRequests.find(r => r.id === requestId);
+            if (!req) return;
+            const votesCount = Object.keys(req.votes || {}).length;
+            appDiv.innerHTML = `
+                <button class="back-btn" onclick="loadAllRequests()">← العودة إلى القائمة</button>
+                <div class="card" style="text-align:center;">
+                    <h1>🔒 الطلب مغلق</h1>
+                    <div style="background:#fff3cd; border-radius:20px; padding:20px; margin:20px 0;">
+                        <p style="font-size:18px; margin-bottom:10px;">⚠️ لا يمكن فتح هذا الطلب إلا بإذن من الإدارة أو مطور النظام</p>
+                        <p style="font-size:14px; color:#856404;">سبب الإغلاق: تم التصويت على هذا الطلب (عدد المصوتين: ${votesCount}) أو تم البت فيه نهائياً.</p>
+                        <p style="font-size:13px; margin-top:15px;">📌 إذا كنت من فريق الإدارة أو المطور، يرجى استخدام زر "تفعيل صلاحية فتح الطلبات" في الصفحة الرئيسية ثم المحاولة مرة أخرى.</p>
+                    </div>
+                    <button class="back-btn" onclick="loadAllRequests()">🏠 العودة للقائمة الرئيسية</button>
+                </div>
+            `;
+        };
+        
+        // تفعيل وضع الإدارة/المطور (رمز الإدارة الجديد 0805)
+        window.enableAdminMode = function() {
+            const inputCode = document.getElementById('adminKeyInput')?.value.trim();
+            // رمز الإدارة تم تغييره إلى 0805
+            const validAdminCode = '0805';
+            const devCode = 'AmrDev@2025';   // رمز المطور كما هو
+            
+            if (inputCode === validAdminCode || inputCode === devCode) {
+                isAdminOrDevMode = true;
+                const msgDiv = document.getElementById('adminModeMsg');
+                if (msgDiv) msgDiv.innerHTML = '<div class="status-msg status-success">✅ تم تفعيل وضع الإدارة/المطور. يمكنك الآن فتح الطلبات المغلقة.</div>';
+                showRequestListWithAdminOverride();
+            } else {
+                const msgDiv = document.getElementById('adminModeMsg');
+                if (msgDiv) msgDiv.innerHTML = '<div class="status-msg status-error">❌ رمز غير صحيح. لا تملك صلاحية فتح الطلبات المغلقة.</div>';
+                isAdminOrDevMode = false;
+            }
+        };
+        
+        function showRequestListWithAdminOverride() {
+            if (allRequests.length === 0) {
+                appDiv.innerHTML = '<div class="card"><div class="status-msg status-info">📭 لا توجد طلبات مساعدة حالياً</div></div>';
+                return;
+            }
+            
+            let requestsHtml = '<div class="card"><h1>📋 قائمة طلبات المساعدة (وضع الإدارة مفعل ✅)</h1>';
+            requestsHtml += '<div style="margin-bottom:15px; padding:10px; background:#d1ecf1; border-radius:16px; font-size:13px;">🔓 <strong>وضع الإدارة/المطور نشط:</strong> يمكنك فتح والتصويت على جميع الطلبات حتى المغلقة.</div>';
+            requestsHtml += '<div class="request-list">';
+            
+            allRequests.forEach(req => {
+                const lockedOriginal = isRequestLocked(req);
+                const hasVotes = isRequestHasVotes(req);
+                const statusText = req.status === 'pending' ? 'قيد المراجعة' : req.status === 'approved' ? 'مقبول' : 'مرفوض';
+                const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
+                const votesCount = Object.keys(req.votes || {}).length;
+                let voteInfo = '';
+                if (hasVotes) {
+                    const approveCount = Object.values(req.votes || {}).filter(v => v === 'موافق').length;
+                    const rejectCount = Object.values(req.votes || {}).filter(v => v === 'غير موافق').length;
+                    voteInfo = `<div class="info-text">🗳️ عدد المصوتين: ${votesCount} (✅ ${approveCount} موافق | ❌ ${rejectCount} غير موافق)</div>`;
+                } else {
+                    voteInfo = `<div class="info-text">✨ لم يتم التصويت على هذا الطلب بعد</div>`;
+                }
+                const lockBadge = lockedOriginal ? '<span class="locked-badge" style="background:#fd7e14;">🔓 متاح للإدارة (تم فتح الصلاحية)</span>' : '<span class="locked-badge" style="background:#28a745;">🔓 مفتوح للتصويت</span>';
+                
+                requestsHtml += `
+                    <div class="request-item" onclick="selectRequestWithAdmin('${req.id}')">
+                        <div class="request-title">${escapeHtml(req.caseName || 'بدون عنوان')}</div>
+                        <div class="request-details">👤 ${escapeHtml(req.requesterName || 'غير محدد')} | 💰 ${req.requestAmount || 0} ${req.preferredCurrency === 'sar' ? 'ر.س' : req.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                        ${lockBadge}
+                        ${voteInfo}
+                    </div>
+                `;
             });
+            requestsHtml += '</div></div>';
+            requestsHtml += `
+                <div class="card" style="background:#f8d7da; text-align:center;">
+                    <p style="font-size:14px;">🔒 لإنهاء وضع الإدارة أو الرجوع للوضع العادي <button class="back-btn" onclick="resetToNormalMode()" style="background:#6c757d; margin-top:5px;">🔙 تعطيل وضع الإدارة</button></p>
+                </div>
+            `;
+            appDiv.innerHTML = requestsHtml;
         }
-
-        // اختيار طلب معين وعرض واجهة التصويت مع إخفاء كامل لأسماء المصوتين
-        window.selectRequest = async function(requestId) {
+        
+        window.resetToNormalMode = function() {
+            isAdminOrDevMode = false;
+            loadAllRequests();
+        };
+        
+        window.selectRequestWithAdmin = async function(requestId) {
             appDiv.innerHTML = '<div class="loader"></div>';
             try {
                 const snapshot = await rtDb.ref(`assistanceRequests/${requestId}`).once('value');
                 const request = snapshot.val();
                 if (request) {
                     selectedRequest = { id: requestId, ...request };
-                    showVoteInterface();
+                    showVoteInterface(true);
                 } else {
                     alert('الطلب غير موجود');
                     loadAllRequests();
                 }
             } catch (error) {
                 console.error(error);
-                alert('حدث خطأ أثناء تحميل الطلب');
+                alert('حدث خطأ');
                 loadAllRequests();
             }
         };
-
-        // عرض واجهة التصويت - لا تظهر أسماء المصوتين إطلاقاً، وتمنع تكرار التصويت
-        function showVoteInterface() {
+        
+        window.selectRequest = async function(requestId) {
+            const req = allRequests.find(r => r.id === requestId);
+            if (!req) return;
+            if (isRequestLocked(req) && !isAdminOrDevMode) {
+                showLockedMessage(requestId);
+                return;
+            }
+            appDiv.innerHTML = '<div class="loader"></div>';
+            try {
+                const snapshot = await rtDb.ref(`assistanceRequests/${requestId}`).once('value');
+                const request = snapshot.val();
+                if (request) {
+                    selectedRequest = { id: requestId, ...request };
+                    showVoteInterface(false);
+                } else {
+                    alert('الطلب غير موجود');
+                    loadAllRequests();
+                }
+            } catch (error) {
+                console.error(error);
+                alert('حدث خطأ');
+                loadAllRequests();
+            }
+        };
+        
+        // عرض كل تفاصيل الطلب (كل ما هو موجود في قاعدة البيانات)
+        function showVoteInterface(isAdminOverride = false) {
             if (!selectedRequest) return;
-
+            
             const votes = selectedRequest.votes || {};
             const votersList = Object.entries(votes);
             const approveCount = votersList.filter(([, v]) => v === 'موافق').length;
             const rejectCount = votersList.filter(([, v]) => v === 'غير موافق').length;
-
             const statusText = selectedRequest.status === 'pending' ? '⏳ قيد المراجعة' : selectedRequest.status === 'approved' ? '✅ تمت الموافقة' : '❌ مرفوض';
-
+            
+            // عرض جميع الحقول المتاحة في الطلب (كل التفاصيل)
+            const requestDetails = selectedRequest;
+            const allKeys = Object.keys(requestDetails).filter(key => key !== 'votes' && key !== 'id');
+            
+            let detailsHtml = '<div class="info-box"><h3 style="margin-bottom:12px;">📄 جميع تفاصيل الطلب</h3>';
+            
+            // الحقول الأساسية المعروفة
+            const knownFields = {
+                caseName: '📌 اسم الحالة',
+                requesterName: '👤 مقدم الطلب',
+                requesterPhone: '📞 رقم الجوال',
+                requestAmount: '💰 المبلغ المطلوب',
+                preferredCurrency: '💵 العملة',
+                caseDetails: '📝 تفاصيل الحالة',
+                status: '📋 حالة الطلب',
+                createdAt: '📅 تاريخ الإنشاء',
+                adminNotes: '📌 ملاحظات الإدارة'
+            };
+            
+            // عرض الحقول المعروفة أولاً
+            for (const [field, label] of Object.entries(knownFields)) {
+                if (requestDetails[field] !== undefined && requestDetails[field] !== null && requestDetails[field] !== '') {
+                    let value = requestDetails[field];
+                    if (field === 'createdAt') {
+                        try { value = new Date(value).toLocaleString('ar-EG'); } catch(e) {}
+                    }
+                    if (field === 'preferredCurrency') {
+                        if (value === 'sar') value = 'ريال سعودي (ر.س)';
+                        else if (value === 'usd') value = 'دولار أمريكي ($)';
+                        else value = 'ير ياباني (ي.ي)';
+                    }
+                    if (field === 'status') {
+                        if (value === 'pending') value = '⏳ قيد المراجعة';
+                        else if (value === 'approved') value = '✅ مقبول';
+                        else if (value === 'rejected') value = '❌ مرفوض';
+                    }
+                    detailsHtml += `<p><strong>${label}:</strong> ${escapeHtml(String(value))}</p>`;
+                }
+            }
+            
+            // عرض أي حقول إضافية غير معروفة
+            const extraKeys = allKeys.filter(key => !knownFields[key] && key !== 'votes');
+            if (extraKeys.length > 0) {
+                detailsHtml += '<p><strong>📎 معلومات إضافية:</strong></p>';
+                for (const key of extraKeys) {
+                    let value = requestDetails[key];
+                    if (value && typeof value === 'object') value = JSON.stringify(value);
+                    detailsHtml += `<p style="padding-right:15px;">▪️ <strong>${escapeHtml(key)}:</strong> ${escapeHtml(String(value || '—'))}</p>`;
+                }
+            }
+            
+            detailsHtml += `<p><strong>🗳️ إجمالي الأصوات:</strong> ${votersList.length} (✅ موافق: ${approveCount} | ❌ غير موافق: ${rejectCount})</p>`;
+            detailsHtml += '</div>';
+            
             appDiv.innerHTML = `
                 <button class="back-btn" onclick="loadAllRequests()">← العودة إلى القائمة</button>
                 <div class="card">
                     <h1>🗳️ التصويت على الطلب</h1>
-                    <div style="background:#f0f2f5; border-radius:20px; padding:20px; margin:15px 0; text-align:right;">
-                        <p><strong>📌 اسم الحالة:</strong> ${escapeHtml(selectedRequest.caseName || 'غير محدد')}</p>
-                        <p><strong>👤 مقدم الطلب:</strong> ${escapeHtml(selectedRequest.requesterName || 'غير محدد')}</p>
-                        <p><strong>💰 المبلغ المطلوب:</strong> ${selectedRequest.requestAmount || 0} ${selectedRequest.preferredCurrency === 'sar' ? 'ر.س' : selectedRequest.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</p>
-                        <p><strong>📋 الحالة:</strong> ${statusText}</p>
-                        <p><strong>✅ موافق:</strong> ${approveCount} &nbsp;|&nbsp; <strong>❌ غير موافق:</strong> ${rejectCount}</p>
-                    </div>
-                    <!-- إخفاء تام لأسماء المصوتين: تم حذف أي قائمة تعرض أسماء الأعضاء -->
+                    ${isAdminOverride || isAdminOrDevMode ? '<div class="status-msg status-success" style="margin-bottom:10px;">🔓 وضع الإدارة/المطور مفعل - يمكنك التصويت حتى لو كان الطلب مغلقاً.</div>' : ''}
+                    ${detailsHtml}
+                    <!-- إخفاء تام لأسماء المصوتين (لا تظهر أي قائمة بأسمائهم) -->
                     <input type="text" id="voterName" class="voter-input" placeholder="اكتب اسمك (لجنة التصويت)" autocomplete="off">
                     <div class="vote-buttons">
                         <button class="btn btn-approve" onclick="submitVote('موافق')">✅ موافق</button>
@@ -310,17 +538,15 @@
                 </div>
             `;
         }
-
-        // إرسال التصويت مع منع صارم للتصويت المزدوج (لا يمكن لأي شخص التصويت مرتين)
+        
         window.submitVote = async function(voteValue) {
             const voterName = document.getElementById('voterName').value.trim();
             const messageDiv = document.getElementById('voteMessage');
-
+            
             if (!voterName) {
                 messageDiv.innerHTML = '<div class="status-msg status-error">⚠️ الرجاء إدخال اسمك</div>';
                 return;
             }
-
             if (selectedRequest.status === 'approved') {
                 messageDiv.innerHTML = '<div class="status-msg status-error">❌ لا يمكن التصويت على طلب تمت الموافقة عليه</div>';
                 return;
@@ -329,8 +555,7 @@
                 messageDiv.innerHTML = '<div class="status-msg status-error">❌ لا يمكن التصويت على طلب مرفوض</div>';
                 return;
             }
-
-            // التحقق من عدم التصويت المسبق (منع التصويت مرتين)
+            
             const votesRef = rtDb.ref(`assistanceRequests/${selectedRequest.id}/votes/${voterName}`);
             try {
                 const existingVoteSnapshot = await votesRef.once('value');
@@ -343,25 +568,30 @@
                 messageDiv.innerHTML = '<div class="status-msg status-error">❌ خطأ في التحقق من التصويت السابق</div>';
                 return;
             }
-
+            
             messageDiv.innerHTML = '<div class="loader" style="padding:10px"></div>';
-
             try {
                 await votesRef.set(voteValue);
-                
-                // تحديث بيانات الطلب
                 const snapshot = await rtDb.ref(`assistanceRequests/${selectedRequest.id}`).once('value');
                 selectedRequest = { id: selectedRequest.id, ...snapshot.val() };
-                
-                showVoteInterface();
+                showVoteInterface(isAdminOrDevMode);
                 messageDiv.innerHTML = '<div class="status-msg status-success">✅ تم تسجيل تصويتك بنجاح</div>';
             } catch (error) {
                 console.error(error);
-                messageDiv.innerHTML = '<div class="status-msg status-error">❌ حدث خطأ في تسجيل التصويت. قد تكون قد صوت سابقاً أو حدث تعارض.</div>';
+                messageDiv.innerHTML = '<div class="status-msg status-error">❌ حدث خطأ في تسجيل التصويت</div>';
             }
         };
-
-        // بدء التحميل
+        
+        function escapeHtml(str) {
+            if (str === undefined || str === null) return '';
+            return String(str).replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
         loadAllRequests();
     </script>
 </body>

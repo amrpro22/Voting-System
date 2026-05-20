@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التصويت على طلبات المساعدة</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        h1 { font-size: 24px; margin-bottom: 10px; color: #1e3c72; text-align: center; }
+        .request-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .request-item {
+            background: #f0f2f5;
+            border-radius: 20px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .request-item:hover {
+            border-color: #667eea;
+            background: #fff;
+        }
+        .request-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        .request-details {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .status-pending { background: #ff9500; color: white; }
+        .status-approved { background: #34c759; color: white; }
+        .status-rejected { background: #ff3b30; color: white; }
+        .loader {
+            text-align: center;
+            padding: 40px;
+        }
+        .loader::after {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .vote-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-approve { background: #34c759; color: white; }
+        .btn-reject { background: #ff3b30; color: white; }
+        .voter-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 14px;
+            margin: 15px 0;
+            text-align: center;
+            background: #fff;
+        }
+        .vote-list {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .vote-item {
+            display: inline-block;
+            padding: 5px 12px;
+            margin: 4px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .vote-item.approve { background: #d4edda; color: #155724; }
+        .vote-item.reject { background: #f8d7da; color: #721c24; }
+        .status-msg {
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .status-success { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        /* تذييل الصفحة الخاص بالمطور والمشرف العام - ترتيب حسب الطلب (المشرف العام فوق اسم المطور) */
+        .footer-credits {
+            text-align: center;
+            margin-top: 30px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 12px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .supervisor {
+            font-size: 15px;
+            font-weight: bold;
+            color: #FFE484;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .developer {
+            font-size: 14px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            border-top: 1px dashed rgba(255,255,255,0.3);
+            padding-top: 6px;
+            display: inline-block;
+            width: 100%;
+        }
+        /* ضمان إخفاء أسماء المصوتين تماماً وعدم ظهورها بأي مكان */
+    </style>
+</head>
+<body>
+    <div class="container" id="app"></div>
+    <!-- تذييل يحتوي على المشرف العام ثم المطور كما هو مطلوب (المشرف العام فوق اسم المطور) -->
+    <div class="footer-credits">
+        <div class="supervisor">👥 المشرف العام : مصطفى الشجاع</div>
+        <div class="developer">⚙️ تطوير النظام : عمرو مسعد الشجاع</div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzX7_q2Abx0pL9L5aMvzJ6I3hDdc8bXy8",
+            authDomain: "magdi-50c75.firebaseapp.com",
+            databaseURL: "https://magdi-50c75-default-rtdb.firebaseio.com",
+            projectId: "magdi-50c75",
+            storageBucket: "magdi-50c75.firebasestorage.app",
+            appId: "1:329518389376:web:f2f73f4a257dcb84efee65"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const rtDb = firebase.database();
+
+        let allRequests = [];
+        let selectedRequest = null;
+
+        const appDiv = document.getElementById('app');
+
+        // تحميل جميع الطلبات
+        async function loadAllRequests() {
+            appDiv.innerHTML = '<div class="loader"></div>';
+            try {
+                const snapshot = await rtDb.ref('assistanceRequests').once('value');
+                const data = snapshot.val();
+                if (data) {
+                    allRequests = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                    allRequests.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                } else {
+                    allRequests = [];
+                }
+                showRequestList();
+            } catch (error) {
+                console.error(error);
+                appDiv.innerHTML = '<div class="card"><div class="status-msg status-error">❌ حدث خطأ في تحميل الطلبات</div></div>';
+            }
+        }
+
+        // عرض قائمة الطلبات
+        function showRequestList() {
+            if (allRequests.length === 0) {
+                appDiv.innerHTML = '<div class="card"><div class="status-msg status-info">📭 لا توجد طلبات مساعدة حالياً</div></div>';
+                return;
+            }
+
+            let requestsHtml = '<div class="card"><h1>📋 اختر الطلب للتصويت عليه</h1><div class="request-list">';
+            allRequests.forEach(req => {
+                const statusText = req.status === 'pending' ? 'قيد المراجعة' : req.status === 'approved' ? 'مقبول' : 'مرفوض';
+                const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
+                requestsHtml += `
+                    <div class="request-item" onclick="selectRequest('${req.id}')">
+                        <div class="request-title">${escapeHtml(req.caseName || 'بدون عنوان')}</div>
+                        <div class="request-details">👤 ${escapeHtml(req.requesterName || 'غير محدد')} | 💰 ${req.requestAmount || 0} ${req.preferredCurrency === 'sar' ? 'ر.س' : req.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                `;
+            });
+            requestsHtml += '</div></div>';
+            appDiv.innerHTML = requestsHtml;
+        }
+
+        // دالة مساعدة للهروب من الـ HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // اختيار طلب معين وعرض واجهة التصويت مع إخفاء كامل لأسماء المصوتين
+        window.selectRequest = async function(requestId) {
+            appDiv.innerHTML = '<div class="loader"></div>';
+            try {
+                const snapshot = await rtDb.ref(`assistanceRequests/${requestId}`).once('value');
+                const request = snapshot.val();
+                if (request) {
+                    selectedRequest = { id: requestId, ...request };
+                    showVoteInterface();
+                } else {
+                    alert('الطلب غير موجود');
+                    loadAllRequests();
+                }
+            } catch (error) {
+                console.error(error);
+                alert('حدث خطأ أثناء تحميل الطلب');
+                loadAllRequests();
+            }
+        };
+
+        // عرض واجهة التصويت - لا تظهر أسماء المصوتين إطلاقاً، وتمنع تكرار التصويت
+        function showVoteInterface() {
+            if (!selectedRequest) return;
+
+            const votes = selectedRequest.votes || {};
+            const votersList = Object.entries(votes);
+            const approveCount = votersList.filter(([, v]) => v === 'موافق').length;
+            const rejectCount = votersList.filter(([, v]) => v === 'غير موافق').length;
+
+            const statusText = selectedRequest.status === 'pending' ? '⏳ قيد المراجعة' : selectedRequest.status === 'approved' ? '✅ تمت الموافقة' : '❌ مرفوض';
+
+            appDiv.innerHTML = `
+                <button class="back-btn" onclick="loadAllRequests()">← العودة إلى القائمة</button>
+                <div class="card">
+                    <h1>🗳️ التصويت على الطلب</h1>
+                    <div style="background:#f0f2f5; border-radius:20px; padding:20px; margin:15px 0; text-align:right;">
+                        <p><strong>📌 اسم الحالة:</strong> ${escapeHtml(selectedRequest.caseName || 'غير محدد')}</p>
+                        <p><strong>👤 مقدم الطلب:</strong> ${escapeHtml(selectedRequest.requesterName || 'غير محدد')}</p>
+                        <p><strong>💰 المبلغ المطلوب:</strong> ${selectedRequest.requestAmount || 0} ${selectedRequest.preferredCurrency === 'sar' ? 'ر.س' : selectedRequest.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</p>
+                        <p><strong>📋 الحالة:</strong> ${statusText}</p>
+                        <p><strong>✅ موافق:</strong> ${approveCount} &nbsp;|&nbsp; <strong>❌ غير موافق:</strong> ${rejectCount}</p>
+                    </div>
+                    <!-- إخفاء تام لأسماء المصوتين: تم حذف أي قائمة تعرض أسماء الأعضاء -->
+                    <input type="text" id="voterName" class="voter-input" placeholder="اكتب اسمك (لجنة التصويت)" autocomplete="off">
+                    <div class="vote-buttons">
+                        <button class="btn btn-approve" onclick="submitVote('موافق')">✅ موافق</button>
+                        <button class="btn btn-reject" onclick="submitVote('غير موافق')">❌ غير موافق</button>
+                    </div>
+                    <div id="voteMessage"></div>
+                </div>
+            `;
+        }
+
+        // إرسال التصويت مع منع صارم للتصويت المزدوج (لا يمكن لأي شخص التصويت مرتين)
+        window.submitVote = async function(voteValue) {
+            const voterName = document.getElementById('voterName').value.trim();
+            const messageDiv = document.getElementById('voteMessage');
+
+            if (!voterName) {
+                messageDiv.innerHTML = '<div class="status-msg status-error">⚠️ الرجاء إدخال اسمك</div>';
+                return;
+            }
+
+            if (selectedRequest.status === 'approved') {
+                messageDiv.innerHTML = '<div class="status-msg status-error">❌ لا يمكن التصويت على طلب تمت الموافقة عليه</div>';
+                return;
+            }
+            if (selectedRequest.status === 'rejected') {
+                messageDiv.innerHTML = '<div class="status-msg status-error">❌ لا يمكن التصويت على طلب مرفوض</div>';
+                return;
+            }
+
+            // التحقق من عدم التصويت المسبق (منع التصويت مرتين)
+            const votesRef = rtDb.ref(`assistanceRequests/${selectedRequest.id}/votes/${voterName}`);
+            try {
+                const existingVoteSnapshot = await votesRef.once('value');
+                if (existingVoteSnapshot.exists()) {
+                    messageDiv.innerHTML = '<div class="status-msg status-error">⚠️ لا يمكنك التصويت مرتين! لقد قمت بتسجيل تصويتك مسبقاً على هذا الطلب.</div>';
+                    return;
+                }
+            } catch (err) {
+                console.error(err);
+                messageDiv.innerHTML = '<div class="status-msg status-error">❌ خطأ في التحقق من التصويت السابق</div>';
+                return;
+            }
+
+            messageDiv.innerHTML = '<div class="loader" style="padding:10px"></div>';
+
+            try {
+                await votesRef.set(voteValue);
+                
+                // تحديث بيانات الطلب
+                const snapshot = await rtDb.ref(`assistanceRequests/${selectedRequest.id}`).once('value');
+                selectedRequest = { id: selectedRequest.id, ...snapshot.val() };
+                
+                showVoteInterface();
+                messageDiv.innerHTML = '<div class="status-msg status-success">✅ تم تسجيل تصويتك بنجاح</div>';
+            } catch (error) {
+                console.error(error);
+                messageDiv.innerHTML = '<div class="status-msg status-error">❌ حدث خطأ في تسجيل التصويت. قد تكون قد صوت سابقاً أو حدث تعارض.</div>';
+            }
+        };
+
+        // بدء التحميل
+        loadAllRequests();
+    </script>
+</body>
+</html>

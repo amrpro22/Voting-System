@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التصويت على طلبات المساعدة | نظام إدارة التصويت</title>
+    <title>نظام التصويت الخاص | طلبات المساعدة</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
@@ -18,7 +18,6 @@
             background: linear-gradient(145deg, #f0f4fc 0%, #e6edf6 100%);
             min-height: 100vh;
             padding: 28px 20px;
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,254 +25,57 @@
         }
 
         .container {
-            max-width: 860px;
+            max-width: 600px;
             width: 100%;
             margin: 0 auto;
             flex: 1;
         }
 
-        /* بطاقات بألوان مختلفة ومميزة */
         .card {
             background: #ffffff;
             border-radius: 32px;
-            padding: 28px 30px;
+            padding: 30px;
             margin-bottom: 24px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
-            transition: all 0.25s ease;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(110, 120, 150, 0.12);
-        }
-
-        /* بطاقات متعددة الألوان بناءً على النوع */
-        .card-primary {
-            background: linear-gradient(135deg, #ffffff 0%, #fefcff 100%);
-            border-top: 4px solid #5b8cce;
-        }
-        .card-secondary {
-            background: linear-gradient(135deg, #fefaf5 0%, #ffffff 100%);
-            border-top: 4px solid #e2a14f;
-        }
-        .card-vote {
-            background: linear-gradient(115deg, #f6f9ff 0%, #ffffff 100%);
-            border-top: 4px solid #3c9e6d;
-        }
-        .card-admin {
-            background: linear-gradient(115deg, #f9f3eb 0%, #ffffff 100%);
-            border-top: 4px solid #b47c48;
-        }
-
-        .card:hover {
-            box-shadow: 0 24px 42px -14px rgba(0, 0, 0, 0.12);
-            transform: translateY(-2px);
+            border-top: 5px solid #5b8cce;
         }
 
         h1 {
-            font-size: 27px;
-            font-weight: 590;
-            letter-spacing: -0.3px;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #1e3a5f, #2c5a7a);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .request-list {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        /* بطاقات الطلبات بألوان مختلفة */
-        .request-item {
-            border-radius: 26px;
-            padding: 20px 24px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            border: 1px solid #eef2f8;
-            background: #ffffff;
-            box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.04);
-        }
-
-        /* ألوان مختلفة لكل طلب بشكل متناوب */
-        .request-item:nth-child(odd) {
-            background: linear-gradient(105deg, #ffffff, #fafdff);
-            border-right: 4px solid #6b9bd2;
-        }
-        .request-item:nth-child(even) {
-            background: linear-gradient(105deg, #ffffff, #fef9f2);
-            border-right: 4px solid #e0a158;
-        }
-        .request-item.locked:nth-child(odd) {
-            background: #f8fafd;
-            border-right: 4px solid #9aaebf;
-            opacity: 0.85;
-        }
-        .request-item.locked:nth-child(even) {
-            background: #faf7f2;
-            border-right: 4px solid #c2aa82;
-            opacity: 0.85;
-        }
-
-        .request-item:not(.locked):hover {
-            border-color: #bdd4ff;
-            background: #ffffff;
-            box-shadow: 0 12px 22px -12px rgba(0, 80, 150, 0.12);
-            transform: scale(1.01);
-        }
-
-        .request-title {
-            font-size: 19px;
-            font-weight: 590;
-            color: #13294b;
-            letter-spacing: -0.2px;
-            margin-bottom: 8px;
-        }
-
-        .request-details {
-            font-size: 14px;
-            color: #4a5b7a;
-            margin-top: 6px;
-            font-weight: 470;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 14px;
-            border-radius: 60px;
-            font-size: 12px;
-            font-weight: 510;
-            margin-top: 12px;
-            letter-spacing: 0.2px;
-        }
-
-        .status-pending {
-            background: #fff1e0;
-            color: #c26b1a;
-            border: 0.5px solid #ffddb0;
-        }
-
-        .status-approved {
-            background: #e3f7ec;
-            color: #1f7840;
-            border: 0.5px solid #b8dfc9;
-        }
-
-        .status-rejected {
-            background: #ffe9e9;
-            color: #bc3f2e;
-            border: 0.5px solid #fccac7;
-        }
-
-        .locked-badge {
-            display: inline-block;
-            background: #eef2f8;
-            color: #4a627a;
-            font-size: 11px;
-            padding: 4px 12px;
-            border-radius: 40px;
-            margin-top: 8px;
-            margin-right: 10px;
-            font-weight: 480;
-            border: 0.5px solid #dce3ec;
-        }
-
-        .loader {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
             text-align: center;
-            padding: 56px;
+            color: #1e3a5f;
         }
 
-        .loader::after {
-            content: "";
-            display: inline-block;
-            width: 34px;
-            height: 34px;
-            border: 3px solid #cdd9f0;
-            border-top: 3px solid #2c5a8c;
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
+        .input-group {
+            margin-bottom: 15px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .back-btn {
-            background: #ffffffdd;
-            backdrop-filter: blur(8px);
-            color: #1f3a64;
-            border: 1px solid #cbdae9;
-            padding: 10px 24px;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-bottom: 22px;
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
             font-size: 14px;
             font-weight: 500;
-            transition: 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+            color: #4a5b7a;
         }
 
-        .back-btn:hover {
-            background: #ffffff;
-            border-color: #9cb2d4;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
-        }
-
-        .vote-buttons {
-            display: flex;
-            gap: 18px;
-            margin: 28px 0 18px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 14px 10px;
-            border: none;
-            border-radius: 60px;
-            font-size: 16px;
-            font-weight: 530;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-family: inherit;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
-
-        .btn-approve {
-            background: #2b7a48;
-            color: white;
-            box-shadow: 0 4px 8px rgba(43, 122, 72, 0.2);
-        }
-
-        .btn-approve:hover {
-            background: #23683d;
-            transform: translateY(-1px);
-        }
-
-        .btn-reject {
-            background: #c23d2b;
-            color: white;
-            box-shadow: 0 4px 8px rgba(194, 61, 43, 0.18);
-        }
-
-        .btn-reject:hover {
-            background: #aa3424;
-            transform: translateY(-1px);
+        .required-star {
+            color: #c23d2b;
+            margin-right: 4px;
         }
 
         .voter-input {
             width: 100%;
             padding: 14px 18px;
             border: 1px solid #dce3ec;
-            border-radius: 60px;
+            border-radius: 15px;
             font-size: 15px;
-            margin: 18px 0 12px;
-            text-align: center;
-            background: #ffffff;
+            background: #fdfdfd;
             font-family: inherit;
             transition: 0.2s;
+            text-align: right;
         }
 
         .voter-input:focus {
@@ -282,113 +84,244 @@
             box-shadow: 0 0 0 3px rgba(87, 118, 157, 0.1);
         }
 
-        .status-msg {
-            padding: 14px 18px;
-            border-radius: 28px;
-            margin-top: 18px;
-            font-size: 14px;
-            font-weight: 470;
-            text-align: center;
+        .voter-input.error-border {
+            border-color: #c23d2b;
+            background-color: #fff5f5;
         }
 
-        .status-success {
-            background: #e2f3e8;
-            color: #1a6e42;
-            border-right: 4px solid #2b7a48;
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            margin-top: 10px;
         }
 
-        .status-error {
-            background: #feeceb;
-            color: #b13b2a;
-            border-right: 4px solid #c23d2b;
+        .btn-primary {
+            background: #2c5a8c;
+            color: white;
+            box-shadow: 0 4px 12px rgba(44, 90, 140, 0.2);
         }
 
-        .status-warning {
-            background: #fff3e4;
-            color: #b45f1b;
-            border-right: 4px solid #e68a2e;
+        .btn-primary:hover {
+            background: #1e3a5f;
+            transform: translateY(-1px);
+        }
+
+        .vote-options {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .opt-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #eef2f8;
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .opt-btn.selected-approve {
+            background: #e3f7ec;
+            border-color: #2b7a48;
+            color: #1f7840;
+        }
+
+        .opt-btn.selected-reject {
+            background: #ffe9e9;
+            border-color: #c23d2b;
+            color: #bc3f2e;
         }
 
         .info-box {
             background: #f7f9fe;
-            border-radius: 28px;
-            padding: 22px 26px;
-            margin: 18px 0;
-            text-align: right;
-            font-size: 14px;
-            line-height: 1.65;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
             border: 1px solid #e4ebf5;
-            box-shadow: inset 0 1px 2px #ffffff, 0 4px 10px rgba(0, 0, 0, 0.02);
         }
 
-        .info-box p {
+        .info-item {
             margin-bottom: 12px;
-            border-bottom: 1px dashed #e0e8f2;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #dce3ec;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
-        .info-box strong {
-            color: #1e3a5f;
-            font-weight: 560;
+        .info-item:last-child { 
+            border: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
-        /* تذييل بطاقة مميزة */
+        .info-label { 
+            font-weight: 700; 
+            color: #1e3a5f; 
+            min-width: 120px;
+            font-size: 14px;
+        }
+
+        .info-value { 
+            color: #2c3e50; 
+            flex: 1;
+            text-align: left;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .info-value.amount {
+            color: #2b7a48;
+            font-weight: 700;
+        }
+
+        .info-value.urgent {
+            color: #c23d2b;
+            font-weight: 700;
+        }
+
+        .status-msg {
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .error { background: #feeceb; color: #b13b2a; }
+        .success { background: #e2f3e8; color: #1a6e42; }
+        .warning { background: #fff3e0; color: #c07a3a; }
+
         .footer-credits {
             text-align: center;
-            margin-top: 38px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: auto;
             background: linear-gradient(135deg, #1e3a5f, #2b4a6e);
-            backdrop-filter: blur(10px);
-            border-radius: 66px;
-            padding: 14px 32px;
-            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.2);
-            border: 0.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            padding: 12px 30px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .supervisor {
-            font-size: 15px;
-            font-weight: 510;
-            color: #FFE5B4;
-            letter-spacing: 0.2px;
-            margin-bottom: 6px;
-        }
-
-        .developer {
-            font-size: 14px;
-            color: #eef3fc;
-            font-weight: 470;
-            border-top: 1px dashed rgba(255, 255, 255, 0.3);
-            padding-top: 8px;
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2c5a8c;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
             display: inline-block;
-            width: 100%;
+            vertical-align: middle;
+            margin-left: 10px;
         }
 
-        .info-text {
-            font-size: 12.5px;
-            color: #556b8a;
-            margin-top: 8px;
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .hidden { display: none; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        /* تلوين البطاقة الرئيسية بالألوان المختلفة */
-        .card-header-info {
-            background: linear-gradient(105deg, #eef4ff, #ffffff);
-            border-bottom: 3px solid #7d9fd3;
+        .status-pending { background: #fff3e0; color: #c07a3a; }
+        .status-approved { background: #e3f7ec; color: #1f7840; }
+        .status-rejected { background: #feeceb; color: #bc3f2e; }
+
+        .urgency-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .urgency-urgent { background: #feeceb; color: #bc3f2e; }
+        .urgency-normal { background: #e3f7ec; color: #1f7840; }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #5b8cce;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app"></div>
+    <div class="container">
+        <!-- شاشة الدخول -->
+        <div id="loginSection" class="card">
+            <h1>تسجيل دخول للتصويت</h1>
+            <div class="input-group">
+                <label class="input-label">
+                    الاسم الرباعي
+                    <span class="required-star">*</span>
+                </label>
+                <input type="text" id="voterName" class="voter-input" placeholder="أدخل اسمك الكامل (رباعي)">
+            </div>
+            <div class="input-group">
+                <label class="input-label">
+                    مكان الإقامة
+                    <span class="required-star">*</span>
+                </label>
+                <input type="text" id="voterAddress" class="voter-input" placeholder="المحافظة / المدينة">
+            </div>
+            <div class="input-group">
+                <label class="input-label">
+                    رقم الحالة
+                    <span class="required-star">*</span>
+                </label>
+                <input type="text" id="caseIdInput" class="voter-input" placeholder="أدخل رقم الحالة المسجل">
+            </div>
+            <button class="btn btn-primary" onclick="accessCase()">دخول</button>
+            <div id="loginMsg"></div>
+        </div>
 
-    <!-- تذييل مطابق للطلب: تطوير عمرو مسعد الشجاع -->
+        <!-- شاشة تفاصيل الحالة والتصويت -->
+        <div id="voteSection" class="card hidden">
+            <h1>تفاصيل حالة المساعدة</h1>
+            <div id="caseDetails" class="info-box">
+                <!-- ستظهر جميع تفاصيل الحالة هنا -->
+            </div>
+
+            <div style="margin-top: 20px;">
+                <div class="section-title">تصويت اللجنة</div>
+                <h3 style="font-size: 16px; color: #4a5b7a; margin: 15px 0 10px 0;">رأيك في الحالة:</h3>
+                <div class="vote-options">
+                    <button id="btnApprove" class="opt-btn" onclick="selectOption('موافق')">موافق</button>
+                    <button id="btnReject" class="opt-btn" onclick="selectOption('غير موافق')">غير موافق</button>
+                </div>
+
+                <button class="btn btn-primary" id="btnSubmitVote" onclick="submitFinalVote()">إرسال التصويت</button>
+                <button class="btn" style="background: #f0f0f0; color: #666;" onclick="location.reload()">رجوع</button>
+                <div id="voteMsg"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="footer-credits">
-        <div class="supervisor">المشرف العام : مصطفى الشجاع</div>
-        <div class="developer">تطوير النظام : عمرو مسعد الشجاع</div>
+        <div style="font-size: 14px; margin-bottom: 5px;">المشرف العام : مصطفى الشجاع</div>
+        <div style="font-size: 12px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px;">تطوير النظام : عمرو مسعد الشجاع</div>
     </div>
 
     <script>
+        // تكوين Firebase (نفس قاعدة بيانات لوحة التحكم)
         const firebaseConfig = {
             apiKey: "AIzaSyBzX7_q2Abx0pL9L5aMvzJ6I3hDdc8bXy8",
             authDomain: "magdi-50c75.firebaseapp.com",
@@ -403,346 +336,282 @@
         }
         const rtDb = firebase.database();
 
-        let allRequests = [];
-        let selectedRequest = null;
-        let isAdminOrDevMode = false;
+        let currentCaseData = null;
+        let selectedVote = null;
+        let voterInfo = { name: '', address: '', caseId: '' };
 
-        const appDiv = document.getElementById('app');
-
-        async function loadAllRequests() {
-            appDiv.innerHTML = '<div class="loader"></div>';
-            try {
-                const snapshot = await rtDb.ref('assistanceRequests').once('value');
-                const data = snapshot.val();
-                if (data) {
-                    allRequests = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                    allRequests.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-                } else {
-                    allRequests = [];
-                }
-                showRequestList();
-            } catch (error) {
-                console.error(error);
-                appDiv.innerHTML = '<div class="card card-primary"><div class="status-msg status-error">حدث خطأ في تحميل الطلبات</div></div>';
-            }
-        }
-
-        function isRequestHasVotes(request) {
-            const votes = request.votes || {};
-            return Object.keys(votes).length > 0;
-        }
-
-        function isRequestLocked(request) {
-            if (!request) return false;
-            if (request.status === 'approved' || request.status === 'rejected') return true;
-            if (isRequestHasVotes(request)) return true;
-            return false;
-        }
-
-        function showRequestList() {
-            if (allRequests.length === 0) {
-                appDiv.innerHTML = '<div class="card card-primary"><div class="status-msg status-info">لا توجد طلبات مساعدة حالياً</div></div>';
-                return;
-            }
-
-            let requestsHtml = '<div class="card card-primary"><h1>اختر الطلب للتصويت عليه</h1>';
-            requestsHtml += '<div style="margin-bottom:18px; padding:12px 16px; background:#eef2fa; border-radius:28px; font-size:13px; color:#3a5670;">الطلبات المفتوحة: متاحة للتصويت  |  الطلبات المغلقة: تم التصويت عليها مسبقاً (لا تفتح إلا بإذن الإدارة أو المطور)</div>';
-            requestsHtml += '<div class="request-list">';
-            
-            for (const req of allRequests) {
-                const locked = isRequestLocked(req);
-                const statusText = req.status === 'pending' ? 'قيد المراجعة' : req.status === 'approved' ? 'مقبول' : 'مرفوض';
-                const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
-                const votesCount = Object.keys(req.votes || {}).length;
-                let voteInfo = '';
-                if (isRequestHasVotes(req)) {
-                    const approveCount = Object.values(req.votes || {}).filter(v => v === 'موافق').length;
-                    const rejectCount = Object.values(req.votes || {}).filter(v => v === 'غير موافق').length;
-                    voteInfo = `<div class="info-text">عدد المصوتين: ${votesCount} (موافق: ${approveCount}  |  غير موافق: ${rejectCount})</div>`;
-                } else {
-                    voteInfo = `<div class="info-text">لم يتم التصويت على هذا الطلب بعد - متاح للتصويت</div>`;
-                }
-                const lockBadge = locked ? '<span class="locked-badge">مغلق (بتصويت)</span>' : '<span class="locked-badge" style="background:#e1f0ea; color:#23683d;">مفتوح للتصويت</span>';
-                const onclickAttr = locked ? `showLockedMessage('${req.id}')` : `selectRequest('${req.id}')`;
-                
-                requestsHtml += `
-                    <div class="request-item ${locked ? 'locked' : ''}" onclick="${onclickAttr}">
-                        <div class="request-title">${escapeHtml(req.caseName || 'بدون عنوان')}</div>
-                        <div class="request-details">مقدم الطلب: ${escapeHtml(req.requesterName || 'غير محدد')}  |  المبلغ: ${req.requestAmount || 0} ${req.preferredCurrency === 'sar' ? 'ر.س' : req.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</div>
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                        ${lockBadge}
-                        ${voteInfo}
-                    </div>
-                `;
-            }
-            requestsHtml += '</div></div>';
-            
-            // بطاقة الإدارة بألوان مختلفة
-            requestsHtml += `
-                <div class="card card-admin" style="text-align:center;">
-                    <p style="font-size:14px; margin-bottom:14px; font-weight:470;">صلاحية فتح الطلبات المغلقة (للمطور أو الإدارة فقط)</p>
-                    <input type="password" id="adminKeyInput" class="voter-input" placeholder="أدخل رمز الإدارة أو المطور" style="max-width:260px; margin:0 auto 14px auto; display:block;">
-                    <button class="back-btn" onclick="enableAdminMode()" style="background:#eef3ff; color:#1e3a5f;">تفعيل صلاحية فتح الطلبات</button>
-                    <div id="adminModeMsg" style="margin-top:12px; font-size:13px;"></div>
-                </div>
-            `;
-            appDiv.innerHTML = requestsHtml;
-        }
-        
-        window.showLockedMessage = function(requestId) {
-            const req = allRequests.find(r => r.id === requestId);
-            if (!req) return;
-            const votesCount = Object.keys(req.votes || {}).length;
-            appDiv.innerHTML = `
-                <button class="back-btn" onclick="loadAllRequests()">← العودة إلى القائمة</button>
-                <div class="card card-secondary" style="text-align:center;">
-                    <h1>الطلب مغلق</h1>
-                    <div style="background:#fef3e2; border-radius:28px; padding:24px; margin:20px 0;">
-                        <p style="font-size:18px; margin-bottom:12px; font-weight:480;">لا يمكن فتح هذا الطلب إلا بإذن من الإدارة أو مطور النظام</p>
-                        <p style="font-size:14px; color:#946f3a;">سبب الإغلاق: تم التصويت على هذا الطلب (عدد المصوتين: ${votesCount}) أو تم البت فيه نهائياً.</p>
-                        <p style="font-size:13px; margin-top:18px;">إذا كنت من فريق الإدارة أو المطور، يرجى استخدام زر "تفعيل صلاحية فتح الطلبات" في الصفحة الرئيسية ثم المحاولة مرة أخرى.</p>
-                    </div>
-                    <button class="back-btn" onclick="loadAllRequests()">العودة للقائمة الرئيسية</button>
-                </div>
-            `;
+        // أنواع الحالات للترجمة
+        const caseTypeLabels = {
+            'accident': 'حادث',
+            'disease': 'مرض',
+            'treatment': 'علاج',
+            'travelTreatment': 'سفر للعلاج',
+            'marriage': 'زواج',
+            'zakatCharity': 'صدقة زكاة',
+            'financialAid': 'مساعدة مالية',
+            'other': 'أخرى'
         };
-        
-        window.enableAdminMode = function() {
-            const inputCode = document.getElementById('adminKeyInput')?.value.trim();
-            const validAdminCode = '0805';
-            const devCode = '511511';
+
+        // دالة لعرض رسائل الخطأ على الحقول
+        function showFieldError(inputId) {
+            const element = document.getElementById(inputId);
+            element.classList.add('error-border');
+            setTimeout(() => {
+                element.classList.remove('error-border');
+            }, 2000);
+        }
+
+        function clearFieldError(inputId) {
+            const element = document.getElementById(inputId);
+            element.classList.remove('error-border');
+        }
+
+        async function accessCase() {
+            const name = document.getElementById('voterName').value.trim();
+            const address = document.getElementById('voterAddress').value.trim();
+            const caseId = document.getElementById('caseIdInput').value.trim();
+            const msg = document.getElementById('loginMsg');
+
+            // التحقق من إجبارية جميع الحقول
+            let hasError = false;
             
-            if (inputCode === validAdminCode || inputCode === devCode) {
-                isAdminOrDevMode = true;
-                const msgDiv = document.getElementById('adminModeMsg');
-                if (msgDiv) msgDiv.innerHTML = '<div class="status-msg status-success">تم تفعيل وضع الإدارة/المطور. يمكنك الآن فتح الطلبات المغلقة.</div>';
-                showRequestListWithAdminOverride();
+            if (!name) {
+                showFieldError('voterName');
+                hasError = true;
             } else {
-                const msgDiv = document.getElementById('adminModeMsg');
-                if (msgDiv) msgDiv.innerHTML = '<div class="status-msg status-error">رمز غير صحيح. لا تملك صلاحية فتح الطلبات المغلقة.</div>';
-                isAdminOrDevMode = false;
+                clearFieldError('voterName');
             }
-        };
-        
-        function showRequestListWithAdminOverride() {
-            if (allRequests.length === 0) {
-                appDiv.innerHTML = '<div class="card card-primary"><div class="status-msg status-info">لا توجد طلبات مساعدة حالياً</div></div>';
+            
+            if (!address) {
+                showFieldError('voterAddress');
+                hasError = true;
+            } else {
+                clearFieldError('voterAddress');
+            }
+            
+            if (!caseId) {
+                showFieldError('caseIdInput');
+                hasError = true;
+            } else {
+                clearFieldError('caseIdInput');
+            }
+
+            if (hasError) {
+                msg.innerHTML = '<div class="status-msg error">يرجى ملء جميع الحقول الإجبارية (*)</div>';
                 return;
             }
-            
-            let requestsHtml = '<div class="card card-primary"><h1>قائمة الطلبات (وضع الإدارة مفعل)</h1>';
-            requestsHtml += '<div style="margin-bottom:16px; padding:12px; background:#e2ecfe; border-radius:24px; font-size:13px;">وضع الإدارة/المطور نشط: يمكنك فتح والتصويت على جميع الطلبات حتى المغلقة.</div>';
-            requestsHtml += '<div class="request-list">';
-            
-            for (const req of allRequests) {
-                const lockedOriginal = isRequestLocked(req);
-                const statusText = req.status === 'pending' ? 'قيد المراجعة' : req.status === 'approved' ? 'مقبول' : 'مرفوض';
-                const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
-                const votesCount = Object.keys(req.votes || {}).length;
-                let voteInfo = '';
-                if (isRequestHasVotes(req)) {
-                    const approveCount = Object.values(req.votes || {}).filter(v => v === 'موافق').length;
-                    const rejectCount = Object.values(req.votes || {}).filter(v => v === 'غير موافق').length;
-                    voteInfo = `<div class="info-text">عدد المصوتين: ${votesCount} (موافق: ${approveCount}  |  غير موافق: ${rejectCount})</div>`;
-                } else {
-                    voteInfo = `<div class="info-text">لم يتم التصويت على هذا الطلب بعد</div>`;
-                }
-                const lockBadge = lockedOriginal ? '<span class="locked-badge" style="background:#dfe8f3; color:#355e8a;">متاح للإدارة (تم فتح الصلاحية)</span>' : '<span class="locked-badge" style="background:#e1f0ea; color:#23683d;">مفتوح للتصويت</span>';
-                
-                requestsHtml += `
-                    <div class="request-item" onclick="selectRequestWithAdmin('${req.id}')">
-                        <div class="request-title">${escapeHtml(req.caseName || 'بدون عنوان')}</div>
-                        <div class="request-details">مقدم الطلب: ${escapeHtml(req.requesterName || 'غير محدد')}  |  المبلغ: ${req.requestAmount || 0} ${req.preferredCurrency === 'sar' ? 'ر.س' : req.preferredCurrency === 'usd' ? '$' : 'ي.ي'}</div>
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                        ${lockBadge}
-                        ${voteInfo}
-                    </div>
-                `;
-            }
-            requestsHtml += '</div></div>';
-            requestsHtml += `
-                <div class="card card-secondary" style="text-align:center;">
-                    <p style="font-size:14px;">لإنهاء وضع الإدارة أو الرجوع للوضع العادي <button class="back-btn" onclick="resetToNormalMode()" style="background:#e9edf2; color:#3c5a7d; margin-top:6px;">تعطيل وضع الإدارة</button></p>
-                </div>
-            `;
-            appDiv.innerHTML = requestsHtml;
-        }
-        
-        window.resetToNormalMode = function() {
-            isAdminOrDevMode = false;
-            loadAllRequests();
-        };
-        
-        window.selectRequestWithAdmin = async function(requestId) {
-            appDiv.innerHTML = '<div class="loader"></div>';
+
+            msg.innerHTML = '<div class="loader"></div> جاري البحث عن الحالة...';
+
             try {
-                const snapshot = await rtDb.ref(`assistanceRequests/${requestId}`).once('value');
-                const request = snapshot.val();
-                if (request) {
-                    selectedRequest = { id: requestId, ...request };
-                    showVoteInterface(true);
+                const snapshot = await rtDb.ref(`assistanceRequests/${caseId}`).once('value');
+                if (snapshot.exists()) {
+                    currentCaseData = snapshot.val();
+                    voterInfo = { name, address, caseId };
+                    displayCase();
+                    msg.innerHTML = '';
                 } else {
-                    alert('الطلب غير موجود');
-                    loadAllRequests();
+                    msg.innerHTML = '<div class="status-msg error">رقم الحالة غير صحيح أو غير موجود</div>';
                 }
             } catch (error) {
                 console.error(error);
-                alert('حدث خطأ');
-                loadAllRequests();
+                msg.innerHTML = '<div class="status-msg error">حدث خطأ في الاتصال بقاعدة البيانات</div>';
             }
-        };
-        
-        window.selectRequest = async function(requestId) {
-            const req = allRequests.find(r => r.id === requestId);
-            if (!req) return;
-            if (isRequestLocked(req) && !isAdminOrDevMode) {
-                showLockedMessage(requestId);
-                return;
-            }
-            appDiv.innerHTML = '<div class="loader"></div>';
-            try {
-                const snapshot = await rtDb.ref(`assistanceRequests/${requestId}`).once('value');
-                const request = snapshot.val();
-                if (request) {
-                    selectedRequest = { id: requestId, ...request };
-                    showVoteInterface(false);
-                } else {
-                    alert('الطلب غير موجود');
-                    loadAllRequests();
-                }
-            } catch (error) {
-                console.error(error);
-                alert('حدث خطأ');
-                loadAllRequests();
-            }
-        };
-        
-        function showVoteInterface(isAdminOverride = false) {
-            if (!selectedRequest) return;
-            
-            const votes = selectedRequest.votes || {};
-            const votersList = Object.entries(votes);
-            const approveCount = votersList.filter(([, v]) => v === 'موافق').length;
-            const rejectCount = votersList.filter(([, v]) => v === 'غير موافق').length;
-            
-            const requestDetails = selectedRequest;
-            const allKeys = Object.keys(requestDetails).filter(key => key !== 'votes' && key !== 'id');
-            
-            let detailsHtml = '<div class="info-box"><h3 style="margin-bottom:16px; font-weight:560;">جميع تفاصيل الطلب</h3>';
-            
-            const knownFields = {
-                caseName: 'اسم الحالة',
-                requesterName: 'مقدم الطلب',
-                requesterPhone: 'رقم الجوال',
-                requestAmount: 'المبلغ المطلوب',
-                preferredCurrency: 'العملة',
-                caseDetails: 'تفاصيل الحالة',
-                status: 'حالة الطلب',
-                createdAt: 'تاريخ الإنشاء',
-                adminNotes: 'ملاحظات الإدارة'
-            };
-            
-            for (const [field, label] of Object.entries(knownFields)) {
-                if (requestDetails[field] !== undefined && requestDetails[field] !== null && requestDetails[field] !== '') {
-                    let value = requestDetails[field];
-                    if (field === 'createdAt') {
-                        try { value = new Date(value).toLocaleString('ar-EG'); } catch(e) {}
-                    }
-                    if (field === 'preferredCurrency') {
-                        if (value === 'sar') value = 'ريال سعودي';
-                        else if (value === 'usd') value = 'دولار أمريكي';
-                        else value = 'ريال يمني';
-                    }
-                    if (field === 'status') {
-                        if (value === 'pending') value = 'قيد المراجعة';
-                        else if (value === 'approved') value = 'مقبول';
-                        else if (value === 'rejected') value = 'مرفوض';
-                    }
-                    detailsHtml += `<p><strong>${label}:</strong> ${escapeHtml(String(value))}</p>`;
-                }
-            }
-            
-            const extraKeys = allKeys.filter(key => !knownFields[key]);
-            if (extraKeys.length > 0) {
-                detailsHtml += '<p><strong>معلومات إضافية:</strong></p>';
-                for (const key of extraKeys) {
-                    let value = requestDetails[key];
-                    if (value && typeof value === 'object') value = JSON.stringify(value);
-                    detailsHtml += `<p style="padding-right:16px;">- <strong>${escapeHtml(key)}:</strong> ${escapeHtml(String(value || '—'))}</p>`;
-                }
-            }
-            
-            detailsHtml += `<p><strong>إجمالي الأصوات:</strong> ${votersList.length} (موافق: ${approveCount}  |  غير موافق: ${rejectCount})</p>`;
-            detailsHtml += '</div>';
-            
-            appDiv.innerHTML = `
-                <button class="back-btn" onclick="loadAllRequests()">← العودة إلى القائمة</button>
-                <div class="card card-vote">
-                    <h1>التصويت على الطلب</h1>
-                    ${isAdminOverride || isAdminOrDevMode ? '<div class="status-msg status-success" style="margin-bottom:14px;">وضع الإدارة/المطور مفعل - يمكنك التصويت حتى لو كان الطلب مغلقاً.</div>' : ''}
-                    ${detailsHtml}
-                    <input type="text" id="voterName" class="voter-input" placeholder="اكتب اسمك (لجنة التصويت)" autocomplete="off">
-                    <div class="vote-buttons">
-                        <button class="btn btn-approve" onclick="submitVote('موافق')">موافق</button>
-                        <button class="btn btn-reject" onclick="submitVote('غير موافق')">غير موافق</button>
-                    </div>
-                    <div id="voteMessage"></div>
-                </div>
-            `;
         }
-        
-        window.submitVote = async function(voteValue) {
-            const voterName = document.getElementById('voterName').value.trim();
-            const messageDiv = document.getElementById('voteMessage');
-            
-            if (!voterName) {
-                messageDiv.innerHTML = '<div class="status-msg status-error">الرجاء إدخال اسمك</div>';
-                return;
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'قيد المراجعة';
+                case 'approved': return 'مقبول';
+                case 'rejected': return 'مرفوض';
+                default: return status || 'غير محدد';
             }
-            if (selectedRequest.status === 'approved') {
-                messageDiv.innerHTML = '<div class="status-msg status-error">لا يمكن التصويت على طلب تمت الموافقة عليه</div>';
-                return;
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'pending': return 'status-pending';
+                case 'approved': return 'status-approved';
+                case 'rejected': return 'status-rejected';
+                default: return '';
             }
-            if (selectedRequest.status === 'rejected') {
-                messageDiv.innerHTML = '<div class="status-msg status-error">لا يمكن التصويت على طلب مرفوض</div>';
-                return;
-            }
-            
-            const votesRef = rtDb.ref(`assistanceRequests/${selectedRequest.id}/votes/${voterName}`);
+        }
+
+        function getCurrencyText(currency) {
+            if (currency === 'sar') return 'ريال سعودي';
+            if (currency === 'usd') return 'دولار أمريكي';
+            return 'ريال يمني';
+        }
+
+        function getCaseTypeText(type) {
+            return caseTypeLabels[type] || type || 'غير محدد';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'غير محدد';
             try {
-                const existing = await votesRef.once('value');
-                if (existing.exists()) {
-                    messageDiv.innerHTML = '<div class="status-msg status-error">لا يمكنك التصويت مرتين! لقد قمت بتسجيل تصويتك مسبقاً على هذا الطلب.</div>';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+            } catch(e) {
+                return dateString;
+            }
+        }
+
+        function displayCase() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('voteSection').classList.remove('hidden');
+
+            const detailsDiv = document.getElementById('caseDetails');
+            const data = currentCaseData;
+
+            // إظهار جميع تفاصيل الحالة
+            detailsDiv.innerHTML = `
+                <div class="info-item">
+                    <span class="info-label">📋 رقم الحالة:</span>
+                    <span class="info-value">${data.id || voterInfo.caseId}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏷️ اسم الحالة:</span>
+                    <span class="info-value">${data.caseName || 'غير محدد'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">👤 مقدم الطلب:</span>
+                    <span class="info-value">${data.requesterName || 'غير محدد'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📂 نوع الحالة:</span>
+                    <span class="info-value">${getCaseTypeText(data.caseType)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📝 تفاصيل الحالة:</span>
+                    <span class="info-value">${data.caseDetails || 'لا توجد تفاصيل إضافية'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 المبلغ المطلوب:</span>
+                    <span class="info-value amount">${(data.requestAmount || 0).toLocaleString()} ${getCurrencyText(data.preferredCurrency)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💵 العملة المفضلة:</span>
+                    <span class="info-value">${getCurrencyText(data.preferredCurrency)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📊 تقرير الدخل:</span>
+                    <span class="info-value">${data.incomeReport || 'لا يوجد تقرير دخل'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">⚡ مستوى الاستعجال:</span>
+                    <span class="info-value ${data.urgencyLevel === 'urgent' ? 'urgent' : ''}">
+                        <span class="urgency-badge ${data.urgencyLevel === 'urgent' ? 'urgency-urgent' : 'urgency-normal'}">
+                            ${data.urgencyLevel === 'urgent' ? '🚨 مستعجل' : '✅ غير مستعجل'}
+                        </span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📅 تاريخ التقديم:</span>
+                    <span class="info-value">${formatDate(data.requestDate)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📍 موقع التقديم:</span>
+                    <span class="info-value">${data.location || 'غير محدد'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📌 حالة الطلب:</span>
+                    <span class="info-value">
+                        <span class="status-badge ${getStatusClass(data.status)}">
+                            ${getStatusText(data.status)}
+                        </span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">👨‍💻 مقدم بواسطة:</span>
+                    <span class="info-value">${data.submittedBy || 'غير محدد'}</span>
+                </div>
+                ${data.reviewedBy ? `
+                <div class="info-item">
+                    <span class="info-label">🔍 تمت المراجعة بواسطة:</span>
+                    <span class="info-value">${data.reviewedBy}</span>
+                </div>
+                ` : ''}
+                ${data.reviewedAt ? `
+                <div class="info-item">
+                    <span class="info-label">📅 تاريخ المراجعة:</span>
+                    <span class="info-value">${new Date(data.reviewedAt).toLocaleDateString('ar-EG')}</span>
+                </div>
+                ` : ''}
+            `;
+
+            // إذا كانت الحالة مقبولة أو مرفوضة، نعرض رسالة للمستخدم
+            if (data.status === 'approved') {
+                const voteMsgDiv = document.getElementById('voteMsg');
+                voteMsgDiv.innerHTML = '<div class="status-msg warning">⚠️ هذه الحالة تمت الموافقة عليها مسبقاً، لا يمكن التصويت عليها.</div>';
+                document.getElementById('btnSubmitVote').disabled = true;
+                document.getElementById('btnSubmitVote').style.opacity = '0.5';
+                document.getElementById('btnApprove').disabled = true;
+                document.getElementById('btnReject').disabled = true;
+            } else if (data.status === 'rejected') {
+                const voteMsgDiv = document.getElementById('voteMsg');
+                voteMsgDiv.innerHTML = '<div class="status-msg error">❌ هذه الحالة تم رفضها مسبقاً، لا يمكن التصويت عليها.</div>';
+                document.getElementById('btnSubmitVote').disabled = true;
+                document.getElementById('btnSubmitVote').style.opacity = '0.5';
+                document.getElementById('btnApprove').disabled = true;
+                document.getElementById('btnReject').disabled = true;
+            }
+        }
+
+        function selectOption(val) {
+            selectedVote = val;
+            const btnApprove = document.getElementById('btnApprove');
+            const btnReject = document.getElementById('btnReject');
+
+            if (val === 'موافق') {
+                btnApprove.className = 'opt-btn selected-approve';
+                btnReject.className = 'opt-btn';
+            } else {
+                btnReject.className = 'opt-btn selected-reject';
+                btnApprove.className = 'opt-btn';
+            }
+        }
+
+        async function submitFinalVote() {
+            const msg = document.getElementById('voteMsg');
+            
+            if (!selectedVote) {
+                msg.innerHTML = '<div class="status-msg error">يرجى اختيار (موافق) أو (غير موافق) أولاً</div>';
+                return;
+            }
+
+            // التحقق من أن الحالة لا تزال pending
+            if (currentCaseData.status !== 'pending') {
+                msg.innerHTML = '<div class="status-msg error">لا يمكن التصويت على هذه الحالة لأنها تمت مراجعتها مسبقاً</div>';
+                return;
+            }
+
+            const votePath = `assistanceRequests/${voterInfo.caseId}/votes/${voterInfo.name}`;
+            
+            try {
+                const check = await rtDb.ref(votePath).once('value');
+                if (check.exists()) {
+                    msg.innerHTML = '<div class="status-msg error">لقد قمت بالتصويت على هذه الحالة مسبقاً</div>';
                     return;
                 }
-            } catch (err) {
-                messageDiv.innerHTML = '<div class="status-msg status-error">خطأ في التحقق من التصويت السابق</div>';
-                return;
-            }
-            
-            messageDiv.innerHTML = '<div class="loader" style="padding:20px"></div>';
-            try {
-                await votesRef.set(voteValue);
-                const snapshot = await rtDb.ref(`assistanceRequests/${selectedRequest.id}`).once('value');
-                selectedRequest = { id: selectedRequest.id, ...snapshot.val() };
-                showVoteInterface(isAdminOrDevMode);
-                messageDiv.innerHTML = '<div class="status-msg status-success">تم تسجيل تصويتك بنجاح</div>';
+
+                await rtDb.ref(votePath).set({
+                    vote: selectedVote,
+                    address: voterInfo.address,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                msg.innerHTML = '<div class="status-msg success">✓ تم إرسال تصويتك بنجاح. شكراً لك.</div>';
+                document.getElementById('btnSubmitVote').disabled = true;
+                document.getElementById('btnSubmitVote').style.opacity = '0.5';
+                document.getElementById('btnApprove').disabled = true;
+                document.getElementById('btnReject').disabled = true;
+
             } catch (error) {
-                messageDiv.innerHTML = '<div class="status-msg status-error">حدث خطأ في تسجيل التصويت</div>';
+                console.error(error);
+                msg.innerHTML = '<div class="status-msg error">حدث خطأ أثناء إرسال التصويت</div>';
             }
-        };
-        
-        function escapeHtml(str) {
-            if (str === undefined || str === null) return '';
-            return String(str).replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
         }
-        
-        loadAllRequests();
     </script>
 </body>
 </html>

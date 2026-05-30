@@ -30,7 +30,6 @@
             margin: 0 auto;
         }
 
-        /* بطاقات التنبيه - كل بطاقة بلون مختلف */
         .alert-card-main {
             background: #ffffff;
             border-radius: 28px;
@@ -40,7 +39,6 @@
             border: 1px solid rgba(110, 120, 150, 0.12);
             border-top: 4px solid #1e3a5f;
             border-right: 4px solid #1e3a5f;
-            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         .alert-title {
@@ -48,11 +46,9 @@
             font-size: 17px;
             margin-bottom: 16px;
             color: #1e3a5f;
-            letter-spacing: -0.3px;
             text-align: center;
         }
 
-        /* كل سطر في بطاقة منفصلة */
         .alert-item-card {
             background: #ffffff;
             border-radius: 20px;
@@ -68,27 +64,11 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* الألوان المختلفة لكل بطاقة */
-        .alert-item-1 {
-            border-right: 5px solid #2c5a8c;
-            background: linear-gradient(135deg, #ffffff, #f0f4fc);
-        }
-        .alert-item-2 {
-            border-right: 5px solid #c07a3a;
-            background: linear-gradient(135deg, #ffffff, #fff8f0);
-        }
-        .alert-item-3 {
-            border-right: 5px solid #bc3f2e;
-            background: linear-gradient(135deg, #ffffff, #fff5f5);
-        }
-        .alert-item-4 {
-            border-right: 5px solid #2b7a48;
-            background: linear-gradient(135deg, #ffffff, #f0fff4);
-        }
-        .alert-item-5 {
-            border-right: 5px solid #8b5cf6;
-            background: linear-gradient(135deg, #ffffff, #f5f0ff);
-        }
+        .alert-item-1 { border-right: 5px solid #2c5a8c; background: linear-gradient(135deg, #ffffff, #f0f4fc); }
+        .alert-item-2 { border-right: 5px solid #c07a3a; background: linear-gradient(135deg, #ffffff, #fff8f0); }
+        .alert-item-3 { border-right: 5px solid #bc3f2e; background: linear-gradient(135deg, #ffffff, #fff5f5); }
+        .alert-item-4 { border-right: 5px solid #2b7a48; background: linear-gradient(135deg, #ffffff, #f0fff4); }
+        .alert-item-5 { border-right: 5px solid #8b5cf6; background: linear-gradient(135deg, #ffffff, #f5f0ff); }
 
         .alert-item-text {
             font-size: 14px;
@@ -130,7 +110,6 @@
             margin-bottom: 18px;
             text-align: center;
             color: #1e3a5f;
-            letter-spacing: -0.3px;
         }
 
         .input-group {
@@ -277,44 +256,14 @@
             margin-top: 12px;
             font-size: 13px;
             font-weight: 500;
-            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        .status-msg.error { 
-            background: #feeceb; 
-            color: #b13b2a; 
-            border-right: 4px solid #bc3f2e;
-        }
-        
-        .status-msg.success { 
-            background: #e2f3e8; 
-            color: #1a6e42; 
-            border-right: 4px solid #2b7a48;
-        }
-        
-        .status-msg.warning { 
-            background: #fff3e0; 
-            color: #c07a3a; 
-            border-right: 4px solid #e2a14f;
-        }
-        
-        .status-msg.info { 
-            background: #e8f0fe; 
-            color: #2c5a8c; 
-            border-right: 4px solid #5b8cce;
-        }
-
-        .status-msg.duplicate { 
-            background: #f0e6ff; 
-            color: #6b3fa0; 
-            border-right: 4px solid #8b5cf6;
-        }
-
-        .status-msg.ip-track { 
-            background: #ffe0e0; 
-            color: #991b1b; 
-            border-right: 4px solid #dc2626;
-        }
+        .status-msg.error { background: #feeceb; color: #b13b2a; border-right: 4px solid #bc3f2e; }
+        .status-msg.success { background: #e2f3e8; color: #1a6e42; border-right: 4px solid #2b7a48; }
+        .status-msg.warning { background: #fff3e0; color: #c07a3a; border-right: 4px solid #e2a14f; }
+        .status-msg.info { background: #e8f0fe; color: #2c5a8c; border-right: 4px solid #5b8cce; }
+        .status-msg.duplicate { background: #f0e6ff; color: #6b3fa0; border-right: 4px solid #8b5cf6; }
+        .status-msg.ip-track { background: #ffe0e0; color: #991b1b; border-right: 4px solid #dc2626; }
 
         .footer {
             text-align: center;
@@ -330,14 +279,8 @@
             margin: 4px 0;
         }
 
-        .footer-line:first-child {
-            font-weight: 500;
-        }
-
-        .footer-line:last-child {
-            font-size: 11px;
-            opacity: 0.85;
-        }
+        .footer-line:first-child { font-weight: 500; }
+        .footer-line:last-child { font-size: 11px; opacity: 0.85; }
 
         .loader {
             border: 3px solid #f3f3f3;
@@ -387,95 +330,84 @@
             border-bottom: 2px solid #5b8cce;
             display: inline-block;
         }
+
+        .case-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-right: 4px solid #2c5a8c;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .case-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 500px) {
+            .container { max-width: 100%; }
+            .info-label { min-width: 90px; font-size: 12px; }
+            .info-value { font-size: 12px; }
+            .alert-item-card { padding: 12px 14px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- بطاقات التنبيه - كل سطر في بطاقة بلون مختلف -->
         <div class="alert-card-main">
             <div class="alert-title">تنبيهات هامة</div>
-            
-            <!-- البطاقة 1 - اللون الأزرق -->
             <div class="alert-item-card alert-item-1">
-                <div class="alert-item-text">
-                    يتم تسجيل رقم الهاتف والـ IP الخاص بجهازك عند التصويت
-                </div>
+                <div class="alert-item-text">يتم تسجيل رقم الهاتف والـ IP الخاص بجهازك عند التصويت</div>
             </div>
-            
-            <!-- البطاقة 2 - اللون البرتقالي -->
             <div class="alert-item-card alert-item-2">
-                <div class="alert-item-text">
-                    في حال تكرار التصويت من نفس الجهاز أو الاسم، يتم إحالة العضو للمساءلة
-                </div>
+                <div class="alert-item-text">في حال تكرار التصويت من نفس الجهاز أو الاسم، يتم إحالة العضو للمساءلة</div>
             </div>
-            
-            <!-- البطاقة 3 - اللون الأحمر -->
             <div class="alert-item-card alert-item-3">
-                <div class="alert-item-text">
-                    يمكن للجنة الإدارة تجميد العضوية بشكل فوري عند ثبوت التلاعب
-                </div>
+                <div class="alert-item-text">يمكن للجنة الإدارة تجميد العضوية بشكل فوري عند ثبوت التلاعب</div>
             </div>
-            
-            <!-- البطاقة 4 - اللون الأخضر -->
             <div class="alert-item-card alert-item-4">
-                <div class="alert-item-text">
-                    التصويت مسموح به مرة واحدة فقط لكل حالة ولكل عضو
-                </div>
+                <div class="alert-item-text">التصويت مسموح به مرة واحدة فقط لكل حالة ولكل عضو</div>
             </div>
-            
-            <!-- البطاقة 5 - اللون البنفسجي -->
             <div class="alert-item-card alert-item-5">
-                <div class="alert-item-text">
-                    نأمل الالتزام بالنزاهة والشفافية حفاظاً على حقوق الجميع
-                </div>
+                <div class="alert-item-text">نأمل الالتزام بالنزاهة والشفافية حفاظاً على حقوق الجميع</div>
             </div>
-            
-            <div class="alert-footer-card">
-                نظام التصويت الآلي - رقابة إلكترونية كاملة
-            </div>
+            <div class="alert-footer-card">نظام التصويت الآلي - رقابة إلكترونية كاملة</div>
         </div>
 
         <!-- شاشة الدخول -->
         <div id="loginSection" class="card">
             <h1>تسجيل دخول للتصويت</h1>
             <div class="input-group">
-                <label class="input-label">
-                    الاسم الرباعي
-                    <span class="required-star">*</span>
-                </label>
+                <label class="input-label">الاسم الرباعي <span class="required-star">*</span></label>
                 <input type="text" id="voterName" class="voter-input" placeholder="أدخل اسمك الكامل رباعي">
             </div>
             <div class="input-group">
-                <label class="input-label">
-                    رقم الهاتف
-                    <span class="required-star">*</span>
-                </label>
+                <label class="input-label">رقم الهاتف <span class="required-star">*</span></label>
                 <input type="tel" id="voterPhone" class="voter-input" placeholder="أدخل رقم هاتفك">
             </div>
             <div class="input-group">
-                <label class="input-label">
-                    مكان الإقامة
-                    <span class="required-star">*</span>
-                </label>
+                <label class="input-label">مكان الإقامة <span class="required-star">*</span></label>
                 <input type="text" id="voterAddress" class="voter-input" placeholder="المحافظة أو المدينة">
             </div>
-            <div class="input-group">
-                <label class="input-label">
-                    رقم الحالة
-                    <span class="required-star">*</span>
-                </label>
-                <input type="text" id="caseIdInput" class="voter-input" placeholder="أدخل رقم الحالة المسجل">
-            </div>
-            <button class="btn btn-primary" onclick="accessCase()">دخول</button>
+            <button class="btn btn-primary" onclick="getVotingCases()">دخول</button>
             <div id="loginMsg"></div>
+        </div>
+
+        <!-- شاشة اختيار الحالة للتصويت -->
+        <div id="selectCaseSection" class="card hidden">
+            <h1>الحالات المحولة للتصويت</h1>
+            <div id="casesList" class="info-box"></div>
+            <button class="btn" style="background: #f0f0f0; color: #666;" onclick="goBackToLogin()">رجوع</button>
+            <div id="selectCaseMsg"></div>
         </div>
 
         <!-- شاشة تفاصيل الحالة والتصويت -->
         <div id="voteSection" class="card hidden">
             <h1>تفاصيل حالة المساعدة</h1>
             <div id="caseDetails" class="info-box"></div>
-
             <div>
                 <div class="section-title">تصويت اللجنة</div>
                 <h3 style="font-size: 15px; color: #4a5b7a; margin: 12px 0 8px 0;">رأيك في الحالة:</h3>
@@ -483,14 +415,12 @@
                     <button id="btnApprove" class="opt-btn" onclick="selectOption('موافق')">موافق</button>
                     <button id="btnReject" class="opt-btn" onclick="selectOption('غير موافق')">غير موافق</button>
                 </div>
-
                 <button class="btn btn-primary" id="btnSubmitVote" onclick="submitFinalVote()">إرسال التصويت</button>
-                <button class="btn" style="background: #f0f0f0; color: #666;" onclick="location.reload()">رجوع</button>
+                <button class="btn" style="background: #f0f0f0; color: #666;" onclick="goBackToSelect()">العودة للقائمة</button>
                 <div id="voteMsg"></div>
             </div>
         </div>
 
-        <!-- التذييل -->
         <div class="footer">
             <div class="footer-line">المشرف العام : مصطفى الشجاع</div>
             <div class="footer-line">تطوير النظام : عمرو مسعد الشجاع</div>
@@ -511,10 +441,12 @@
             firebase.initializeApp(firebaseConfig);
         }
         const rtDb = firebase.database();
+        const APP_PATH = "amr4admin";
 
         let currentCaseData = null;
         let selectedVote = null;
         let voterInfo = { name: '', phone: '', address: '', caseId: '', ip: '' };
+        let votingCasesList = [];
 
         async function getUserIP() {
             try {
@@ -541,9 +473,7 @@
         function showFieldError(inputId) {
             const element = document.getElementById(inputId);
             element.classList.add('error-border');
-            setTimeout(() => {
-                element.classList.remove('error-border');
-            }, 2000);
+            setTimeout(() => element.classList.remove('error-border'), 2000);
         }
 
         function clearFieldError(inputId) {
@@ -551,44 +481,163 @@
             element.classList.remove('error-border');
         }
 
-        async function accessCase() {
+        function goBackToLogin() {
+            document.getElementById('selectCaseSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginMsg').innerHTML = '';
+            document.getElementById('voterName').value = '';
+            document.getElementById('voterPhone').value = '';
+            document.getElementById('voterAddress').value = '';
+        }
+
+        function goBackToSelect() {
+            document.getElementById('voteSection').classList.add('hidden');
+            document.getElementById('selectCaseSection').classList.remove('hidden');
+            selectedVote = null;
+            document.getElementById('voteMsg').innerHTML = '';
+            document.getElementById('btnApprove').className = 'opt-btn';
+            document.getElementById('btnReject').className = 'opt-btn';
+        }
+
+        async function getVotingCases() {
             const name = document.getElementById('voterName').value.trim();
             const phone = document.getElementById('voterPhone').value.trim();
             const address = document.getElementById('voterAddress').value.trim();
-            const caseId = document.getElementById('caseIdInput').value.trim();
             const msg = document.getElementById('loginMsg');
 
             let hasError = false;
-            
             if (!name) { showFieldError('voterName'); hasError = true; }
             else { clearFieldError('voterName'); }
-            
             if (!phone) { showFieldError('voterPhone'); hasError = true; }
             else { clearFieldError('voterPhone'); }
-            
             if (!address) { showFieldError('voterAddress'); hasError = true; }
             else { clearFieldError('voterAddress'); }
-            
-            if (!caseId) { showFieldError('caseIdInput'); hasError = true; }
-            else { clearFieldError('caseIdInput'); }
 
             if (hasError) {
                 msg.innerHTML = '<div class="status-msg error">يرجى ملء جميع الحقول الإجبارية</div>';
                 return;
             }
 
-            msg.innerHTML = '<div class="loader"></div> جاري البحث عن الحالة...';
+            msg.innerHTML = '<div class="loader"></div> جاري تحميل الحالات المحولة للتصويت...';
 
+            try {
+                const userIP = await getUserIP();
+                voterInfo = { name, phone, address, caseId: '', ip: userIP };
+                
+                // جلب الحالات التي تم تحويلها للتصويت من مسار voting_submissions
+                const votingSnapshot = await rtDb.ref(`${APP_PATH}/voting_submissions`).once('value');
+                const votingData = votingSnapshot.val() || {};
+                
+                const votingCaseIds = [];
+                for (const [key, votingItem] of Object.entries(votingData)) {
+                    if (votingItem.originalId) {
+                        votingCaseIds.push(votingItem.originalId);
+                    }
+                }
+                
+                if (votingCaseIds.length === 0) {
+                    msg.innerHTML = '<div class="status-msg warning">لا توجد حالات تم تحويلها للتصويت حالياً</div>';
+                    return;
+                }
+                
+                // جلب تفاصيل الحالات من assistanceRequests
+                const requestsSnapshot = await rtDb.ref(`assistanceRequests`).once('value');
+                const allCases = requestsSnapshot.val() || {};
+                
+                const validVotingCases = [];
+                for (const [id, caseData] of Object.entries(allCases)) {
+                    if (votingCaseIds.includes(id) && caseData.status === 'pending') {
+                        // التحقق من أن المستخدم لم يسبق له التصويت على هذه الحالة
+                        const votes = caseData.votes || {};
+                        let alreadyVoted = false;
+                        for (const [voterName, voteData] of Object.entries(votes)) {
+                            if (voterName === name || voteData.phone === phone || voteData.ip === userIP) {
+                                alreadyVoted = true;
+                                break;
+                            }
+                        }
+                        if (!alreadyVoted) {
+                            validVotingCases.push({ id, ...caseData });
+                        }
+                    }
+                }
+                
+                if (validVotingCases.length === 0) {
+                    msg.innerHTML = '<div class="status-msg warning">لا توجد حالات متاحة للتصويت حالياً (إما قمت بالتصويت عليها مسبقاً أو لا توجد حالات محولة)</div>';
+                    return;
+                }
+                
+                votingCasesList = validVotingCases;
+                displayCasesList();
+                msg.innerHTML = '';
+                
+            } catch (error) {
+                console.error(error);
+                msg.innerHTML = '<div class="status-msg error">حدث خطأ في الاتصال بقاعدة البيانات</div>';
+            }
+        }
+
+        function displayCasesList() {
+            document.getElementById('loginSection').classList.add('hidden');
+            const selectSection = document.getElementById('selectCaseSection');
+            selectSection.classList.remove('hidden');
+            
+            const casesDiv = document.getElementById('casesList');
+            
+            if (votingCasesList.length === 0) {
+                casesDiv.innerHTML = '<div class="status-msg warning">لا توجد حالات محولة للتصويت</div>';
+                return;
+            }
+            
+            let casesHtml = '';
+            votingCasesList.forEach((caseData, index) => {
+                const borderColors = ['#2c5a8c', '#c07a3a', '#2b7a48', '#8b5cf6', '#bc3f2e'];
+                const colorIndex = index % borderColors.length;
+                casesHtml += `
+                    <div class="case-card" style="border-right-color: ${borderColors[colorIndex]};" onclick="selectCase('${caseData.id}')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <div>
+                                <div style="font-weight: 700; color: #1e3a5f; margin-bottom: 6px;">${caseData.caseName || 'بدون اسم'}</div>
+                                <div style="font-size: 12px; color: #6c6c70;">مقدم الطلب: ${caseData.requesterName || 'غير محدد'}</div>
+                                <div style="font-size: 12px; color: #6c6c70;">نوع الحالة: ${caseTypeLabels[caseData.caseType] || caseData.caseType || 'غير محدد'}</div>
+                            </div>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; color: #2b7a48;">${(caseData.requestAmount || 0).toLocaleString()} ${caseData.preferredCurrency === 'sar' ? 'ر.س' : caseData.preferredCurrency === 'usd' ? '$' : 'ر.ي'}</div>
+                                <div style="font-size: 11px; color: #8e8e93; margin-top: 4px;">${caseData.requestDate || 'تاريخ غير محدد'}</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #5b8cce;">اضغط لاختيار هذه الحالة</div>
+                    </div>
+                `;
+            });
+            
+            casesDiv.innerHTML = casesHtml;
+        }
+
+        async function selectCase(caseId) {
+            const msg = document.getElementById('selectCaseMsg');
+            msg.innerHTML = '<div class="loader"></div> جاري تحميل تفاصيل الحالة...';
+            
             try {
                 const snapshot = await rtDb.ref(`assistanceRequests/${caseId}`).once('value');
                 if (snapshot.exists()) {
                     currentCaseData = snapshot.val();
-                    const userIP = await getUserIP();
-                    voterInfo = { name, phone, address, caseId, ip: userIP };
+                    currentCaseData.id = caseId;
+                    voterInfo.caseId = caseId;
                     displayCase();
                     msg.innerHTML = '';
+                    document.getElementById('selectCaseSection').classList.add('hidden');
+                    document.getElementById('voteSection').classList.remove('hidden');
+                    selectedVote = null;
+                    document.getElementById('btnApprove').className = 'opt-btn';
+                    document.getElementById('btnReject').className = 'opt-btn';
+                    document.getElementById('voteMsg').innerHTML = '';
+                    document.getElementById('btnSubmitVote').disabled = false;
+                    document.getElementById('btnSubmitVote').style.opacity = '1';
+                    document.getElementById('btnApprove').disabled = false;
+                    document.getElementById('btnReject').disabled = false;
                 } else {
-                    msg.innerHTML = '<div class="status-msg error">رقم الحالة غير صحيح أو غير موجود</div>';
+                    msg.innerHTML = '<div class="status-msg error">حدث خطأ في تحميل تفاصيل الحالة</div>';
                 }
             } catch (error) {
                 console.error(error);
@@ -635,11 +684,8 @@
         }
 
         function displayCase() {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('voteSection').classList.remove('hidden');
-
-            const detailsDiv = document.getElementById('caseDetails');
             const data = currentCaseData;
+            const detailsDiv = document.getElementById('caseDetails');
 
             detailsDiv.innerHTML = `
                 <div class="info-item"><span class="info-label">رقم الحالة:</span><span class="info-value">${data.id || voterInfo.caseId}</span></div>
@@ -658,17 +704,6 @@
                 ${data.reviewedBy ? `<div class="info-item"><span class="info-label">تمت المراجعة بواسطة:</span><span class="info-value">${data.reviewedBy}</span></div>` : ''}
                 ${data.reviewedAt ? `<div class="info-item"><span class="info-label">تاريخ المراجعة:</span><span class="info-value">${new Date(data.reviewedAt).toLocaleDateString('ar-EG')}</span></div>` : ''}
             `;
-
-            if (data.status !== 'pending') {
-                const voteMsgDiv = document.getElementById('voteMsg');
-                voteMsgDiv.innerHTML = data.status === 'approved' ? 
-                    '<div class="status-msg warning">هذه الحالة تمت الموافقة عليها مسبقاً، لا يمكن التصويت عليها.</div>' : 
-                    '<div class="status-msg error">هذه الحالة تم رفضها مسبقاً، لا يمكن التصويت عليها.</div>';
-                document.getElementById('btnSubmitVote').disabled = true;
-                document.getElementById('btnSubmitVote').style.opacity = '0.5';
-                document.getElementById('btnApprove').disabled = true;
-                document.getElementById('btnReject').disabled = true;
-            }
         }
 
         function selectOption(val) {
@@ -709,7 +744,7 @@
                     duplicateFound = true;
                     break;
                 }
-                if (value.ip === voterInfo.ip && value.ip !== 'غير معروف') {
+                if (value.ip === voterInfo.ip && voterInfo.ip !== 'غير معروف') {
                     msg.innerHTML = '<div class="status-msg ip-track">تم رصد تصويت سابق من نفس الجهاز IP. ممنوع تكرار التصويت. سيتم تجميد العضوية.</div>';
                     duplicateFound = true;
                     break;

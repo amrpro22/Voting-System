@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التصويت الخاص | طلبات المساعدة</title>
+    <title>نظام التصويت | لجنة المساعدات</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
@@ -25,7 +25,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
             margin: 0 auto;
         }
@@ -129,7 +129,7 @@
             margin-right: 4px;
         }
 
-        .voter-input {
+        .voter-input, .voter-select {
             width: 100%;
             padding: 12px 16px;
             border: 1px solid #dce3ec;
@@ -141,13 +141,18 @@
             text-align: right;
         }
 
-        .voter-input:focus {
+        .voter-select {
+            cursor: pointer;
+            background: #fdfdfd;
+        }
+
+        .voter-input:focus, .voter-select:focus {
             outline: none;
             border-color: #6b8fbd;
             box-shadow: 0 0 0 3px rgba(87, 118, 157, 0.1);
         }
 
-        .voter-input.error-border {
+        .voter-input.error-border, .voter-select.error-border {
             border-color: #c23d2b;
             background-color: #fff5f5;
         }
@@ -346,6 +351,13 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
+        .password-hint {
+            font-size: 11px;
+            color: #8e8e93;
+            margin-top: 6px;
+            text-align: center;
+        }
+
         @media (max-width: 500px) {
             .container { max-width: 100%; }
             .info-label { min-width: 90px; font-size: 12px; }
@@ -372,7 +384,7 @@
                 <div class="alert-item-text">التصويت مسموح به مرة واحدة فقط لكل حالة ولكل عضو</div>
             </div>
             <div class="alert-item-card alert-item-5">
-                <div class="alert-item-text">نأمل الالتزام بالنزاهة والشفافية حفاظاً على حقوق الجميع</div>
+                <div class="alert-item-text">بعد التصويت على حالة، لن تظهر لك مجدداً في قائمة التصويت</div>
             </div>
             <div class="alert-footer-card">نظام التصويت الآلي - رقابة إلكترونية كاملة</div>
         </div>
@@ -381,8 +393,35 @@
         <div id="loginSection" class="card">
             <h1>تسجيل دخول للتصويت</h1>
             <div class="input-group">
-                <label class="input-label">الاسم الرباعي <span class="required-star">*</span></label>
-                <input type="text" id="voterName" class="voter-input" placeholder="أدخل اسمك الكامل رباعي">
+                <label class="input-label">اختر اسم العضو <span class="required-star">*</span></label>
+                <select id="voterNameSelect" class="voter-select">
+                    <option value="">-- اختر العضو --</option>
+                    <option value="فايز احمد العمامي">فايز احمد العمامي</option>
+                    <option value="عبد الناصر عادل الجحدري">عبد الناصر عادل الجحدري</option>
+                    <option value="علي محمد أحمد">علي محمد أحمد</option>
+                    <option value="عبدالرحمن علي الشجاع">عبدالرحمن علي الشجاع</option>
+                    <option value="مجدي عبده علي ثابت">مجدي عبده علي ثابت</option>
+                    <option value="معمر علي علي ثابث">معمر علي علي ثابث</option>
+                    <option value="محمد عبده علي السمه">محمد عبده علي السمه</option>
+                    <option value="علي عبده الحاج السمه">علي عبده الحاج السمه</option>
+                    <option value="ناصر محمد الشجاع">ناصر محمد الشجاع</option>
+                    <option value="علي عبده مسعد الشجاع">علي عبده مسعد الشجاع</option>
+                    <option value="احمد بن احمد الشجاع">احمد بن احمد الشجاع</option>
+                    <option value="مجيد علي الشجاع">مجيد علي الشجاع</option>
+                    <option value="عمار مطهر الشجاع">عمار مطهر الشجاع</option>
+                    <option value="محمد محمد الحاج الشجاع">محمد محمد الحاج الشجاع</option>
+                    <option value="نبيل أحمد مصلح الشجاع">نبيل أحمد مصلح الشجاع</option>
+                    <option value="مفيد عبده أحمد الغزالي">مفيد عبده أحمد الغزالي</option>
+                    <option value="محمد ناجي محمد صالح الشجاع">محمد ناجي محمد صالح الشجاع</option>
+                    <option value="مصطفى محمد علي الشجاع">مصطفى محمد علي الشجاع</option>
+                    <option value="ياسر محمد احمد الشجاع">ياسر محمد احمد الشجاع</option>
+                    <option value="عمرو مسعد الشجاع">عمرو مسعد الشجاع</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label class="input-label">كلمة المرور (الرقم السري) <span class="required-star">*</span></label>
+                <input type="password" id="voterPassword" class="voter-input" placeholder="أدخل الرقم السري الخاص بك">
+                <div class="password-hint">كلمة المرور هي التي تم ارسالها لك من قبل المشرف او مطور النظام</div>
             </div>
             <div class="input-group">
                 <label class="input-label">رقم الهاتف <span class="required-star">*</span></label>
@@ -392,7 +431,7 @@
                 <label class="input-label">مكان الإقامة <span class="required-star">*</span></label>
                 <input type="text" id="voterAddress" class="voter-input" placeholder="المحافظة أو المدينة">
             </div>
-            <button class="btn btn-primary" onclick="getVotingCases()">دخول</button>
+            <button class="btn btn-primary" onclick="verifyAndLogin()">دخول</button>
             <div id="loginMsg"></div>
         </div>
 
@@ -400,7 +439,7 @@
         <div id="selectCaseSection" class="card hidden">
             <h1>الحالات المحولة للتصويت</h1>
             <div id="casesList" class="info-box"></div>
-            <button class="btn" style="background: #f0f0f0; color: #666;" onclick="goBackToLogin()">رجوع</button>
+            <button class="btn" style="background: #f0f0f0; color: #666;" onclick="goBackToLogin()">تسجيل خروج</button>
             <div id="selectCaseMsg"></div>
         </div>
 
@@ -428,6 +467,30 @@
     </div>
 
     <script>
+        // قائمة المستخدمين المسجلين مع كلمات المرور
+        const usersList = [
+            { name: "فايز احمد العمامي", password: "1001" },
+            { name: "عبد الناصر عادل الجحدري", password: "1002" },
+            { name: "علي محمد أحمد", password: "1003" },
+            { name: "عبدالرحمن علي الشجاع", password: "1004" },
+            { name: "مجدي عبده علي ثابت", password: "1005" },
+            { name: "معمر علي علي ثابث", password: "1006" },
+            { name: "محمد عبده علي السمه", password: "1007" },
+            { name: "علي عبده الحاج السمه", password: "1008" },
+            { name: "ناصر محمد الشجاع", password: "1009" },
+            { name: "علي عبده مسعد الشجاع", password: "1010" },
+            { name: "احمد بن احمد الشجاع", password: "1011" },
+            { name: "مجيد علي الشجاع", password: "1012" },
+            { name: "عمار مطهر الشجاع", password: "1013" },
+            { name: "محمد محمد الحاج الشجاع", password: "1014" },
+            { name: "نبيل أحمد مصلح الشجاع", password: "1015" },
+            { name: "مفيد عبده أحمد الغزالي", password: "1016" },
+            { name: "محمد ناجي محمد صالح الشجاع", password: "1017" },
+            { name: "مصطفى محمد علي الشجاع", password: "1018" },
+            { name: "ياسر محمد احمد الشجاع", password: "1019" },
+            { name: "عمرو مسعد الشجاع", password: "1020" }
+        ];
+
         const firebaseConfig = {
             apiKey: "AIzaSyBzX7_q2Abx0pL9L5aMvzJ6I3hDdc8bXy8",
             authDomain: "magdi-50c75.firebaseapp.com",
@@ -485,9 +548,13 @@
             document.getElementById('selectCaseSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
             document.getElementById('loginMsg').innerHTML = '';
-            document.getElementById('voterName').value = '';
+            document.getElementById('voterNameSelect').value = '';
+            document.getElementById('voterPassword').value = '';
             document.getElementById('voterPhone').value = '';
             document.getElementById('voterAddress').value = '';
+            selectedVote = null;
+            currentCaseData = null;
+            votingCasesList = [];
         }
 
         function goBackToSelect() {
@@ -499,15 +566,18 @@
             document.getElementById('btnReject').className = 'opt-btn';
         }
 
-        async function getVotingCases() {
-            const name = document.getElementById('voterName').value.trim();
+        function verifyAndLogin() {
+            const selectedName = document.getElementById('voterNameSelect').value;
+            const password = document.getElementById('voterPassword').value.trim();
             const phone = document.getElementById('voterPhone').value.trim();
             const address = document.getElementById('voterAddress').value.trim();
             const msg = document.getElementById('loginMsg');
 
             let hasError = false;
-            if (!name) { showFieldError('voterName'); hasError = true; }
-            else { clearFieldError('voterName'); }
+            if (!selectedName) { showFieldError('voterNameSelect'); hasError = true; }
+            else { clearFieldError('voterNameSelect'); }
+            if (!password) { showFieldError('voterPassword'); hasError = true; }
+            else { clearFieldError('voterPassword'); }
             if (!phone) { showFieldError('voterPhone'); hasError = true; }
             else { clearFieldError('voterPhone'); }
             if (!address) { showFieldError('voterAddress'); hasError = true; }
@@ -518,8 +588,18 @@
                 return;
             }
 
-            msg.innerHTML = '<div class="loader"></div> جاري تحميل الحالات المحولة للتصويت...';
+            // التحقق من صحة الاسم وكلمة المرور
+            const validUser = usersList.find(user => user.name === selectedName && user.password === password);
+            if (!validUser) {
+                msg.innerHTML = '<div class="status-msg error">الاسم أو كلمة المرور غير صحيحة</div>';
+                return;
+            }
 
+            msg.innerHTML = '<div class="loader"></div> جاري التحقق والتحميل...';
+            proceedWithLogin(selectedName, phone, address, msg);
+        }
+
+        async function proceedWithLogin(name, phone, address, msgElement) {
             try {
                 const userIP = await getUserIP();
                 voterInfo = { name, phone, address, caseId: '', ip: userIP };
@@ -536,7 +616,7 @@
                 }
                 
                 if (votingCaseIds.length === 0) {
-                    msg.innerHTML = '<div class="status-msg warning">لا توجد حالات تم تحويلها للتصويت حالياً</div>';
+                    msgElement.innerHTML = '<div class="status-msg warning">لا توجد حالات تم تحويلها للتصويت حالياً</div>';
                     return;
                 }
                 
@@ -563,17 +643,17 @@
                 }
                 
                 if (validVotingCases.length === 0) {
-                    msg.innerHTML = '<div class="status-msg warning">لا توجد حالات متاحة للتصويت حالياً (إما قمت بالتصويت عليها مسبقاً أو لا توجد حالات محولة)</div>';
+                    msgElement.innerHTML = '<div class="status-msg warning">لا توجد حالات متاحة للتصويت حالياً (إما قمت بالتصويت عليها مسبقاً أو لا توجد حالات محولة)</div>';
                     return;
                 }
                 
                 votingCasesList = validVotingCases;
                 displayCasesList();
-                msg.innerHTML = '';
+                msgElement.innerHTML = '';
                 
             } catch (error) {
                 console.error(error);
-                msg.innerHTML = '<div class="status-msg error">حدث خطأ في الاتصال بقاعدة البيانات</div>';
+                msgElement.innerHTML = '<div class="status-msg error">حدث خطأ في الاتصال بقاعدة البيانات</div>';
             }
         }
 
@@ -597,8 +677,8 @@
                     <div class="case-card" style="border-right-color: ${borderColors[colorIndex]};" onclick="selectCase('${caseData.id}')">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                             <div>
-                                <div style="font-weight: 700; color: #1e3a5f; margin-bottom: 6px;">${caseData.caseName || 'بدون اسم'}</div>
-                                <div style="font-size: 12px; color: #6c6c70;">مقدم الطلب: ${caseData.requesterName || 'غير محدد'}</div>
+                                <div style="font-weight: 700; color: #1e3a5f; margin-bottom: 6px;">${escapeHtml(caseData.caseName) || 'بدون اسم'}</div>
+                                <div style="font-size: 12px; color: #6c6c70;">مقدم الطلب: ${escapeHtml(caseData.requesterName) || 'غير محدد'}</div>
                                 <div style="font-size: 12px; color: #6c6c70;">نوع الحالة: ${caseTypeLabels[caseData.caseType] || caseData.caseType || 'غير محدد'}</div>
                             </div>
                             <div style="text-align: left;">
@@ -612,6 +692,16 @@
             });
             
             casesDiv.innerHTML = casesHtml;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
         }
 
         async function selectCase(caseId) {
@@ -689,19 +779,19 @@
 
             detailsDiv.innerHTML = `
                 <div class="info-item"><span class="info-label">رقم الحالة:</span><span class="info-value">${data.id || voterInfo.caseId}</span></div>
-                <div class="info-item"><span class="info-label">اسم الحالة:</span><span class="info-value">${data.caseName || 'غير محدد'}</span></div>
-                <div class="info-item"><span class="info-label">مقدم الطلب:</span><span class="info-value">${data.requesterName || 'غير محدد'}</span></div>
+                <div class="info-item"><span class="info-label">اسم الحالة:</span><span class="info-value">${escapeHtml(data.caseName) || 'غير محدد'}</span></div>
+                <div class="info-item"><span class="info-label">مقدم الطلب:</span><span class="info-value">${escapeHtml(data.requesterName) || 'غير محدد'}</span></div>
                 <div class="info-item"><span class="info-label">نوع الحالة:</span><span class="info-value">${getCaseTypeText(data.caseType)}</span></div>
-                <div class="info-item"><span class="info-label">تفاصيل الحالة:</span><span class="info-value">${data.caseDetails || 'لا توجد تفاصيل إضافية'}</span></div>
+                <div class="info-item"><span class="info-label">تفاصيل الحالة:</span><span class="info-value">${escapeHtml(data.caseDetails) || 'لا توجد تفاصيل إضافية'}</span></div>
                 <div class="info-item"><span class="info-label">المبلغ المطلوب:</span><span class="info-value amount">${(data.requestAmount || 0).toLocaleString()} ${getCurrencyText(data.preferredCurrency)}</span></div>
                 <div class="info-item"><span class="info-label">العملة المفضلة:</span><span class="info-value">${getCurrencyText(data.preferredCurrency)}</span></div>
-                <div class="info-item"><span class="info-label">تقرير الدخل:</span><span class="info-value">${data.incomeReport || 'لا يوجد تقرير دخل'}</span></div>
+                <div class="info-item"><span class="info-label">تقرير الدخل:</span><span class="info-value">${escapeHtml(data.incomeReport) || 'لا يوجد تقرير دخل'}</span></div>
                 <div class="info-item"><span class="info-label">مستوى الاستعجال:</span><span class="info-value"><span class="urgency-badge ${data.urgencyLevel === 'urgent' ? 'urgency-urgent' : 'urgency-normal'}">${data.urgencyLevel === 'urgent' ? 'مستعجل' : 'غير مستعجل'}</span></span></div>
                 <div class="info-item"><span class="info-label">تاريخ التقديم:</span><span class="info-value">${formatDate(data.requestDate)}</span></div>
-                <div class="info-item"><span class="info-label">موقع التقديم:</span><span class="info-value">${data.location || 'غير محدد'}</span></div>
+                <div class="info-item"><span class="info-label">موقع التقديم:</span><span class="info-value">${escapeHtml(data.location) || 'غير محدد'}</span></div>
                 <div class="info-item"><span class="info-label">حالة الطلب:</span><span class="info-value"><span class="status-badge ${getStatusClass(data.status)}">${getStatusText(data.status)}</span></span></div>
-                <div class="info-item"><span class="info-label">مقدم بواسطة:</span><span class="info-value">${data.submittedBy || 'غير محدد'}</span></div>
-                ${data.reviewedBy ? `<div class="info-item"><span class="info-label">تمت المراجعة بواسطة:</span><span class="info-value">${data.reviewedBy}</span></div>` : ''}
+                <div class="info-item"><span class="info-label">مقدم بواسطة:</span><span class="info-value">${escapeHtml(data.submittedBy) || 'غير محدد'}</span></div>
+                ${data.reviewedBy ? `<div class="info-item"><span class="info-label">تمت المراجعة بواسطة:</span><span class="info-value">${escapeHtml(data.reviewedBy)}</span></div>` : ''}
                 ${data.reviewedAt ? `<div class="info-item"><span class="info-label">تاريخ المراجعة:</span><span class="info-value">${new Date(data.reviewedAt).toLocaleDateString('ar-EG')}</span></div>` : ''}
             `;
         }
@@ -740,17 +830,17 @@
             let duplicateFound = false;
             for (const [key, value] of Object.entries(votes)) {
                 if (key === voterInfo.name) {
-                    msg.innerHTML = '<div class="status-msg duplicate">لقد قمت بالتصويت على هذه الحالة مسبقاً بنفس الاسم. تم رصد المخالفة وسيتم إحالتك للمساءلة.</div>';
+                    msg.innerHTML = '<div class="status-msg duplicate">⚠️ لقد قمت بالتصويت على هذه الحالة مسبقاً بنفس الاسم. تم رصد المخالفة وسيتم إحالتك للمساءلة.</div>';
                     duplicateFound = true;
                     break;
                 }
                 if (value.ip === voterInfo.ip && voterInfo.ip !== 'غير معروف') {
-                    msg.innerHTML = '<div class="status-msg ip-track">تم رصد تصويت سابق من نفس الجهاز IP. ممنوع تكرار التصويت. سيتم تجميد العضوية.</div>';
+                    msg.innerHTML = '<div class="status-msg ip-track">⚠️ تم رصد تصويت سابق من نفس الجهاز IP. ممنوع تكرار التصويت. سيتم تجميد العضوية.</div>';
                     duplicateFound = true;
                     break;
                 }
                 if (value.phone === voterInfo.phone) {
-                    msg.innerHTML = '<div class="status-msg duplicate">تم رصد تصويت سابق بنفس رقم الهاتف. يمنع تكرار التصويت. سيتم إحالتك للمساءلة.</div>';
+                    msg.innerHTML = '<div class="status-msg duplicate">⚠️ تم رصد تصويت سابق بنفس رقم الهاتف. يمنع تكرار التصويت. سيتم إحالتك للمساءلة.</div>';
                     duplicateFound = true;
                     break;
                 }
@@ -767,11 +857,25 @@
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                msg.innerHTML = '<div class="status-msg success">تم إرسال تصويتك بنجاح. شكراً لك على نزاهتك.</div>';
+                msg.innerHTML = '<div class="status-msg success">✅ تم إرسال تصويتك بنجاح. شكراً لك على نزاهتك.</div>';
                 document.getElementById('btnSubmitVote').disabled = true;
                 document.getElementById('btnSubmitVote').style.opacity = '0.5';
                 document.getElementById('btnApprove').disabled = true;
                 document.getElementById('btnReject').disabled = true;
+
+                // حذف الحالة من القائمة المحلية حتى لا تظهر مرة أخرى
+                votingCasesList = votingCasesList.filter(c => c.id !== voterInfo.caseId);
+                
+                // تحديث القائمة المعروضة
+                setTimeout(() => {
+                    goBackToSelect();
+                    const casesDiv = document.getElementById('casesList');
+                    if (votingCasesList.length === 0) {
+                        casesDiv.innerHTML = '<div class="status-msg info">🎉 شكراً لك! لقد قمت بالتصويت على جميع الحالات المتاحة. لا توجد حالات متبقية للتصويت.</div>';
+                    } else {
+                        displayCasesList();
+                    }
+                }, 1500);
 
             } catch (error) {
                 console.error(error);

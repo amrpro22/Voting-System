@@ -30,68 +30,55 @@
             margin: 0 auto;
         }
 
-        .alert-card-main {
-            background: #ffffff;
+        /* القسم الجديد: نظام التصويت الإلكتروني الشامل */
+        .system-header-card {
+            background: linear-gradient(135deg, #1e3a5f, #2c5a8c);
             border-radius: 28px;
-            padding: 20px 24px;
+            padding: 24px 20px;
             margin-bottom: 20px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(110, 120, 150, 0.12);
-            border-top: 4px solid #1e3a5f;
-            border-right: 4px solid #1e3a5f;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        .alert-title {
+        .system-title {
+            font-size: 24px;
             font-weight: 700;
-            font-size: 17px;
-            margin-bottom: 16px;
-            color: #1e3a5f;
-            text-align: center;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
         }
-
-        .alert-item-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 16px 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(110, 120, 150, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .alert-item-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .alert-item-1 { border-right: 5px solid #2c5a8c; background: linear-gradient(135deg, #ffffff, #f0f4fc); }
-        .alert-item-2 { border-right: 5px solid #c07a3a; background: linear-gradient(135deg, #ffffff, #fff8f0); }
-        .alert-item-3 { border-right: 5px solid #bc3f2e; background: linear-gradient(135deg, #ffffff, #fff5f5); }
-        .alert-item-4 { border-right: 5px solid #2b7a48; background: linear-gradient(135deg, #ffffff, #f0fff4); }
-        .alert-item-5 { border-right: 5px solid #8b5cf6; background: linear-gradient(135deg, #ffffff, #f5f0ff); }
-
-        .alert-item-text {
-            font-size: 14px;
-            line-height: 1.5;
+        .system-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 500;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            display: inline-block;
+            padding-top: 8px;
+            margin-top: 6px;
         }
-
-        .alert-item-1 .alert-item-text { color: #1e3a5f; }
-        .alert-item-2 .alert-item-text { color: #7a4a1a; }
-        .alert-item-3 .alert-item-text { color: #991b1b; }
-        .alert-item-4 .alert-item-text { color: #1f7840; }
-        .alert-item-5 .alert-item-text { color: #6b3fa0; }
-
-        .alert-footer-card {
-            background: #f8f9fc;
-            border-radius: 16px;
-            padding: 12px;
-            margin-top: 8px;
-            text-align: center;
+        .monitor-text {
             font-size: 12px;
-            color: #5b8cce;
+            color: #ffd966;
+            margin-top: 12px;
             font-weight: 500;
-            border: 1px solid #e4ebf5;
+            background: rgba(0,0,0,0.2);
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+        }
+        .support-link {
+            margin-top: 14px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.15);
+            padding: 8px 12px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .support-link a {
+            color: #ffd966;
+            text-decoration: none;
+            font-weight: 600;
         }
 
         .card {
@@ -358,35 +345,64 @@
             text-align: center;
         }
 
+        /* رسالة الأمانة المؤثرة */
+        .integrity-message-card {
+            background: linear-gradient(135deg, #fff8e7, #fff3df);
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            border-right: 5px solid #d4a017;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+        }
+        .integrity-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #8b6914;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .integrity-text {
+            font-size: 13px;
+            line-height: 1.65;
+            color: #4a3b1a;
+            font-weight: 500;
+        }
+        .integrity-text strong {
+            color: #b8860b;
+        }
+        .integrity-badge {
+            display: inline-block;
+            background: #e8dbbd;
+            border-radius: 30px;
+            padding: 3px 12px;
+            font-size: 11px;
+            margin-top: 10px;
+            color: #5e3a0c;
+        }
+
         @media (max-width: 500px) {
             .container { max-width: 100%; }
             .info-label { min-width: 90px; font-size: 12px; }
             .info-value { font-size: 12px; }
-            .alert-item-card { padding: 12px 14px; }
+            .integrity-message-card { padding: 14px 16px; }
+            .system-title { font-size: 20px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="alert-card-main">
-            <div class="alert-title">تنبيهات هامة</div>
-            <div class="alert-item-card alert-item-1">
-                <div class="alert-item-text">يتم تسجيل رقم الهاتف والـ IP الخاص بجهازك عند التصويت</div>
+        
+        <!-- القسم الجديد: نظام التصويت الإلكتروني الشامل (بدلاً من التنبيهات الهامة) -->
+        <div class="system-header-card">
+            <div class="system-title"> نظام التصويت الإلكتروني الشامل</div>
+            <div class="system-subtitle">لجنة المساعدات - التصويت الآمن والنزيه</div>
+            <div class="monitor-text"> يتم مراقبة الأصوات من قبل الإدارة بشكل دائم</div>
+            <div class="support-link">
+                 إذا واجهتك أي مشكلة، تحدث مع <a href="#" onclick="contactDeveloper()">مطور النظام</a>
             </div>
-            <div class="alert-item-card alert-item-2">
-                <div class="alert-item-text">في حال تكرار التصويت من نفس الجهاز أو الاسم، يتم إحالة العضو للمساءلة</div>
-            </div>
-            <div class="alert-item-card alert-item-3">
-                <div class="alert-item-text">يمكن للجنة الإدارة تجميد العضوية بشكل فوري عند ثبوت التلاعب</div>
-            </div>
-            <div class="alert-item-card alert-item-4">
-                <div class="alert-item-text">التصويت مسموح به مرة واحدة فقط لكل حالة ولكل عضو</div>
-            </div>
-            <div class="alert-item-card alert-item-5">
-                <div class="alert-item-text">بعد التصويت على حالة، لن تظهر لك مجدداً في قائمة التصويت</div>
-            </div>
-            <div class="alert-footer-card">نظام التصويت الآلي - رقابة إلكترونية كاملة</div>
         </div>
 
         <!-- شاشة الدخول -->
@@ -423,14 +439,22 @@
                 <input type="password" id="voterPassword" class="voter-input" placeholder="أدخل الرقم السري الخاص بك">
                 <div class="password-hint">كلمة المرور هي التي تم ارسالها لك من قبل المشرف او مطور النظام</div>
             </div>
-            <div class="input-group">
-                <label class="input-label">رقم الهاتف <span class="required-star">*</span></label>
-                <input type="tel" id="voterPhone" class="voter-input" placeholder="أدخل رقم هاتفك">
+            
+            <!-- رسالة الأمانة المؤثرة -->
+            <div class="integrity-message-card">
+                <div class="integrity-title">
+                    <span> أمانة القرار وعدالة التصويت</span>
+                </div>
+                <div class="integrity-text">
+                    <strong>“إن الله يأمركم أن تؤدوا الأمانات إلى أهلها”</strong><br><br>
+                    تم <strong>إلغاء طلب رقم الهاتف ومكان الإقامة</strong> احتراماً لخصوصيتكم، واعتماداً على <strong>أمانتكم ونزاهتكم</strong>.
+                    عند الإدلاء بصوتك، تذكر أن قرارك يجب أن يكون <strong>خالياً من أي انحياز أو تأثر بالعلاقات الشخصية</strong>.
+                    صوتك هو أمانة أمام الله ثم أمام المستحقين الذين ينتظرون حكمك العادل. 
+                    لا للقرابة، لا للصداقة، لا للخصومة — فقط للحقيقة والعدالة.
+                    <div class="integrity-badge"> صوتك = أمانة · التصويت بدون ضغوط · النزاهة فوق كل اعتبار</div>
+                </div>
             </div>
-            <div class="input-group">
-                <label class="input-label">مكان الإقامة <span class="required-star">*</span></label>
-                <input type="text" id="voterAddress" class="voter-input" placeholder="المحافظة أو المدينة">
-            </div>
+            
             <button class="btn btn-primary" onclick="verifyAndLogin()">دخول</button>
             <div id="loginMsg"></div>
         </div>
@@ -508,7 +532,7 @@
 
         let currentCaseData = null;
         let selectedVote = null;
-        let voterInfo = { name: '', phone: '', address: '', caseId: '', ip: '' };
+        let voterInfo = { name: '', caseId: '', ip: '' };
         let votingCasesList = [];
 
         async function getUserIP() {
@@ -521,6 +545,11 @@
                 return 'غير معروف';
             }
         }
+
+        // دالة التواصل مع مطور النظام
+        window.contactDeveloper = function() {
+            alert("📞 يمكنك التواصل مع مطور النظام:\nعمرو مسعد الشجاع\nعبر القنوات المخصصة للإدارة.\nسيتم الرد عليك في أقرب وقت.");
+        };
 
         const caseTypeLabels = {
             'accident': 'حادث',
@@ -550,8 +579,6 @@
             document.getElementById('loginMsg').innerHTML = '';
             document.getElementById('voterNameSelect').value = '';
             document.getElementById('voterPassword').value = '';
-            document.getElementById('voterPhone').value = '';
-            document.getElementById('voterAddress').value = '';
             selectedVote = null;
             currentCaseData = null;
             votingCasesList = [];
@@ -569,8 +596,6 @@
         function verifyAndLogin() {
             const selectedName = document.getElementById('voterNameSelect').value;
             const password = document.getElementById('voterPassword').value.trim();
-            const phone = document.getElementById('voterPhone').value.trim();
-            const address = document.getElementById('voterAddress').value.trim();
             const msg = document.getElementById('loginMsg');
 
             let hasError = false;
@@ -578,17 +603,12 @@
             else { clearFieldError('voterNameSelect'); }
             if (!password) { showFieldError('voterPassword'); hasError = true; }
             else { clearFieldError('voterPassword'); }
-            if (!phone) { showFieldError('voterPhone'); hasError = true; }
-            else { clearFieldError('voterPhone'); }
-            if (!address) { showFieldError('voterAddress'); hasError = true; }
-            else { clearFieldError('voterAddress'); }
 
             if (hasError) {
                 msg.innerHTML = '<div class="status-msg error">يرجى ملء جميع الحقول الإجبارية</div>';
                 return;
             }
 
-            // التحقق من صحة الاسم وكلمة المرور
             const validUser = usersList.find(user => user.name === selectedName && user.password === password);
             if (!validUser) {
                 msg.innerHTML = '<div class="status-msg error">الاسم أو كلمة المرور غير صحيحة</div>';
@@ -596,15 +616,14 @@
             }
 
             msg.innerHTML = '<div class="loader"></div> جاري التحقق والتحميل...';
-            proceedWithLogin(selectedName, phone, address, msg);
+            proceedWithLogin(selectedName, msg);
         }
 
-        async function proceedWithLogin(name, phone, address, msgElement) {
+        async function proceedWithLogin(name, msgElement) {
             try {
                 const userIP = await getUserIP();
-                voterInfo = { name, phone, address, caseId: '', ip: userIP };
+                voterInfo = { name, caseId: '', ip: userIP };
                 
-                // جلب الحالات التي تم تحويلها للتصويت من مسار voting_submissions
                 const votingSnapshot = await rtDb.ref(`${APP_PATH}/voting_submissions`).once('value');
                 const votingData = votingSnapshot.val() || {};
                 
@@ -620,18 +639,16 @@
                     return;
                 }
                 
-                // جلب تفاصيل الحالات من assistanceRequests
                 const requestsSnapshot = await rtDb.ref(`assistanceRequests`).once('value');
                 const allCases = requestsSnapshot.val() || {};
                 
                 const validVotingCases = [];
                 for (const [id, caseData] of Object.entries(allCases)) {
                     if (votingCaseIds.includes(id) && caseData.status === 'pending') {
-                        // التحقق من أن المستخدم لم يسبق له التصويت على هذه الحالة
                         const votes = caseData.votes || {};
                         let alreadyVoted = false;
                         for (const [voterName, voteData] of Object.entries(votes)) {
-                            if (voterName === name || voteData.phone === phone || voteData.ip === userIP) {
+                            if (voterName === name || voteData.ip === userIP) {
                                 alreadyVoted = true;
                                 break;
                             }
@@ -835,12 +852,7 @@
                     break;
                 }
                 if (value.ip === voterInfo.ip && voterInfo.ip !== 'غير معروف') {
-                    msg.innerHTML = '<div class="status-msg ip-track">⚠️ تم رصد تصويت سابق من نفس الجهاز IP. ممنوع تكرار التصويت. سيتم تجميد العضوية.</div>';
-                    duplicateFound = true;
-                    break;
-                }
-                if (value.phone === voterInfo.phone) {
-                    msg.innerHTML = '<div class="status-msg duplicate">⚠️ تم رصد تصويت سابق بنفس رقم الهاتف. يمنع تكرار التصويت. سيتم إحالتك للمساءلة.</div>';
+                    msg.innerHTML = '<div class="status-msg ip-track">⚠️ تم رصد تصويت سابق من نفس الجهاز. ممنوع تكرار التصويت. سيتم تجميد العضوية.</div>';
                     duplicateFound = true;
                     break;
                 }
@@ -851,22 +863,18 @@
             try {
                 await rtDb.ref(`assistanceRequests/${voterInfo.caseId}/votes/${voterInfo.name}`).set({
                     vote: selectedVote,
-                    phone: voterInfo.phone,
-                    address: voterInfo.address,
                     ip: voterInfo.ip,
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                msg.innerHTML = '<div class="status-msg success">✅ تم إرسال تصويتك بنجاح. شكراً لك على نزاهتك.</div>';
+                msg.innerHTML = '<div class="status-msg success">✅ تم إرسال تصويتك بنجاح. شكراً لك على نزاهتك وأمانتك في اتخاذ القرار.</div>';
                 document.getElementById('btnSubmitVote').disabled = true;
                 document.getElementById('btnSubmitVote').style.opacity = '0.5';
                 document.getElementById('btnApprove').disabled = true;
                 document.getElementById('btnReject').disabled = true;
 
-                // حذف الحالة من القائمة المحلية حتى لا تظهر مرة أخرى
                 votingCasesList = votingCasesList.filter(c => c.id !== voterInfo.caseId);
                 
-                // تحديث القائمة المعروضة
                 setTimeout(() => {
                     goBackToSelect();
                     const casesDiv = document.getElementById('casesList');
